@@ -58,6 +58,7 @@ static const map<Parser::token_type, string> type_to_string = {
     {Parser::token::SELF, "self"},
     {Parser::token::SEMICOLON, "semi-colon"},
     {Parser::token::STRINGID, "string"},
+    {Parser::token::STRING, "string"},
     {Parser::token::THEN, "then"},
     {Parser::token::TRUE, "true"},
     {Parser::token::UNIT, "unit"},

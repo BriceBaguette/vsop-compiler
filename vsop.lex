@@ -11,6 +11,7 @@
 %{
     /* Includes */
     #include <string>
+    #include <stack>
 
     #include "parser.hpp"
     #include "driver.hpp"
@@ -41,7 +42,10 @@
     #define YY_USER_ACTION  loc.columns(yyleng);
 
     // Global variable used to maintain the current location.
+    string currentString;
+    location initPos;
     location loc;
+    stack <location> stringLocation;
 %}
 
     /* Definitions */
@@ -50,6 +54,8 @@ typeId    [A-Z][a-zA-Z_0-9]*
 int   [0-9]+
 blank [ \t\r]
 
+
+%x QUOTE
 %%
 %{
     // Code run each time yylex is called.
@@ -57,7 +63,24 @@ blank [ \t\r]
 %}
     /* Rules */
 
+    // string rules
 
+"\""        { 
+                BEGIN(QUOTE);
+                currentString = "";
+                stringLocation.push(loc);
+            }
+
+<QUOTE>"\"" {
+                BEGIN(INITIAL);
+                initPos = stringLocation.top();
+                stringLocation.pop();
+                return Parser::make_STRING(currentString,initPos);
+}
+
+<QUOTE>.  {
+                currentString += yytext;
+}
 
     /* White spaces */
 {blank}+    loc.step();
