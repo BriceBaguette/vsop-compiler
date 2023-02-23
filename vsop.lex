@@ -78,6 +78,30 @@ blank [ \t\r]
                 return Parser::make_STRING(currentString,initPos);
 }
 
+<QUOTE>"\\\"" {
+    currentString += "\x22";
+}
+
+<QUOTE>"\\n" {
+    currentString += "\x0a";
+}
+
+<QUOTE>"\\b" {
+    currentString += "\x08";
+}
+
+<QUOTE>"\\t" {
+    currentString += "\x09";
+}
+
+<QUOTE>"\\r" {
+    currentString += "\x0d";
+}
+
+<QUOTE>"\\"  {
+    currentString += "\x5c";
+}
+
 <QUOTE>.  {
                 currentString += yytext;
 }
