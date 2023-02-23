@@ -63,7 +63,7 @@ blank [ \t\r]
 %}
     /* Rules */
 
-    // string rules
+    // string rules, needs ton handle all cases but not the case atm;
 
 "\""        { 
                 BEGIN(QUOTE);
