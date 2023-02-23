@@ -79,27 +79,27 @@ blank [ \t\r]
 }
 
 <QUOTE>"\\\"" {
-    currentString += "\x22";
+    currentString += "\\x22";
 }
 
 <QUOTE>"\\n" {
-    currentString += "\x0a";
+    currentString += "\\x0a";
 }
 
 <QUOTE>"\\b" {
-    currentString += "\x08";
+    currentString += "\\x08";
 }
 
 <QUOTE>"\\t" {
-    currentString += "\x09";
+    currentString += "\\x09";
 }
 
 <QUOTE>"\\r" {
-    currentString += "\x0d";
+    currentString += "\\x0d";
 }
 
 <QUOTE>"\\"  {
-    currentString += "\x5c";
+    currentString += "\\x5c";
 }
 
 <QUOTE>.  {

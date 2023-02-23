@@ -868,42 +868,42 @@ case 3:
 YY_RULE_SETUP
 #line 82 "vsop.lex"
 {
-    currentString += "\x22";
+    currentString += "\\x22";
 }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 86 "vsop.lex"
 {
-    currentString += "\x0a";
+    currentString += "\\x0a";
 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 90 "vsop.lex"
 {
-    currentString += "\x08";
+    currentString += "\\x08";
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 94 "vsop.lex"
 {
-    currentString += "\x09";
+    currentString += "\\x09";
 }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 98 "vsop.lex"
 {
-    currentString += "\x0d";
+    currentString += "\\x0d";
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 102 "vsop.lex"
 {
-    currentString += "\x5c";
+    currentString += "\\x5c";
 }
 	YY_BREAK
 case 9:
