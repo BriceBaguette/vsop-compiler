@@ -49,10 +49,29 @@
 %}
 
     /* Definitions */
+
+low_case [a-z]
+up_case [A-Z]
+letter {low_case}|{up_case}
+digit [0-9]
+bin_digit 0|1
+hex_digit [a-fA-F0-9]
+
+    /* Identifiers */
+
 objId    [a-z][a-zA-Z_0-9]*
 typeId    [A-Z][a-zA-Z_0-9]*
 int   [0-9]+
-blank [ \t\r]
+int_hex "0x"{hex_digit}+
+
+    /* Blank */
+
+tab \t 
+lf \n
+ff \f
+cr \r
+horizontal_blank (" "|{tab})+
+vertical_blank ({lf}|{ff}|{cr})
 
 
 %x QUOTE
@@ -98,17 +117,31 @@ blank [ \t\r]
     currentString += "\\x0d";
 }
 
-<QUOTE>"\\"  {
+<QUOTE>"\\x"  {
+    currentString += yytext;
+}
+
+<QUOTE>"\\"({vertical_blank})+({horizontal_blank})* {
+    loc.lines(yyleng);
+    loc.step();
+}
+
+<QUOTE>"\\\\" {
     currentString += "\\x5c";
 }
 
+<QUOTE>"\\"x{hex_digit}{hex_digit}+ {
+    currentString += yytext;
+}
+
 <QUOTE>.  {
-                currentString += yytext;
+    currentString += yytext;
 }
 
     /* White spaces */
-{blank}+    loc.step();
-\n+         loc.lines(yyleng); loc.step();
+
+{horizontal_blank}    loc.step();
+{vertical_blank}      loc.lines(); loc.step();
 
     /* Operators */
 "-"         return Parser::make_MINUS(loc);
