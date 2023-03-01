@@ -210,7 +210,7 @@ vertical_blank ({lf}|{ff}|{cr})
     /* White spaces */
 
 {horizontal_blank}    loc.step();
-{vertical_blank}+      loc.lines(); loc.step();
+{vertical_blank}+      loc.lines(yyleng); loc.step();
 
     /* Operators */
 "-"         return Parser::make_MINUS(loc);
