@@ -42,10 +42,12 @@
     #define YY_USER_ACTION  loc.columns(yyleng);
 
     // Global variable used to maintain the current location.
+    int count;
     string currentString;
     location initPos;
     location loc;
     stack <location> stringLocation;
+    stack <location> commentLocation;
 %}
 
     /* Definitions */
@@ -73,8 +75,7 @@ cr \r
 horizontal_blank (" "|{tab})+
 vertical_blank ({lf}|{ff}|{cr})
 
-
-%x QUOTE
+%x QUOTE COMMENTS MULTICOMMENTS
 %%
 %{
     // Code run each time yylex is called.
@@ -122,7 +123,7 @@ vertical_blank ({lf}|{ff}|{cr})
 }
 
 <QUOTE>"\\"({vertical_blank})+({horizontal_blank})* {
-    loc.lines(yyleng);
+    loc.lines();
     loc.step();
 }
 
@@ -134,14 +135,82 @@ vertical_blank ({lf}|{ff}|{cr})
     currentString += yytext;
 }
 
+    /* String error handling */
+
+<QUOTE>"\\"{letter}+ {
+    print_error(loc.begin,"unvalid escape character in string");
+    return Parser::make_YYerror(loc);
+}
+
+<QUOTE>{lf} {
+    print_error(loc.begin,"unvalid line feed in string");
+    return Parser::make_YYerror(loc);
+}
+
+<QUOTE><<EOF>> {
+    initPos = stringLocation.top();
+    stringLocation.pop();
+    print_error(initPos.begin, "unclosed double quote");
+    return Parser::make_YYEOF(loc);
+}
+
+    /* Other valid characters */
+
 <QUOTE>.  {
     currentString += yytext;
+}
+
+
+"//"        { 
+                BEGIN(COMMENTS);
+            }
+
+<COMMENTS>{vertical_blank}+ {
+                BEGIN(INITIAL);
+                loc.lines(); loc.step();
+}
+
+<COMMENTS>. {         
+}
+
+"(*"        {
+                BEGIN(MULTICOMMENTS);
+                commentLocation.push(loc);
+                count = 1;
+}
+
+<MULTICOMMENTS>"(*" {
+    commentLocation.push(loc);
+    count++;
+}
+
+<MULTICOMMENTS>{vertical_blank}+ {
+    loc.lines();
+}
+
+<MULTICOMMENTS>"*)" {
+    commentLocation.pop();
+    count--;
+    if(count == 0){
+        BEGIN(INITIAL);
+    }
+}
+
+<MULTICOMMENTS><<EOF>> {
+    initPos = commentLocation.top();
+    commentLocation.pop();
+    print_error(initPos.begin, "unclosed multiline comments");
+    return Parser::make_YYEOF(loc);
+}
+
+<MULTICOMMENTS>. {
+    
 }
 
     /* White spaces */
 
 {horizontal_blank}    loc.step();
-{vertical_blank}      loc.lines(); loc.step();
+{vertical_blank}+      loc.lines(); loc.step();
 
     /* Operators */
 "-"         return Parser::make_MINUS(loc);
@@ -186,6 +255,18 @@ vertical_blank ({lf}|{ff}|{cr})
 
     /* Numbers and identifiers */
 
+{int_hex} {
+    std::string s = std::to_string(std::stoi(yytext,0,16));
+    return make_NUMBER(s,loc);
+}
+{int_hex}[g-zG-Z]+ {
+            print_error(loc.begin, "unvalid int-literal");
+            return Parser::make_YYerror(loc);
+}
+{int}{letter}+ {
+            print_error(loc.begin, "unvalid int-literal");
+            return Parser::make_YYerror(loc);
+}
 {int}       return make_NUMBER(yytext, loc);
 {objId}     return Parser::make_OBJECTIDENTIFIER(yytext, loc);
 {typeId}    return Parser::make_TYPEIDENTIFIER(yytext, loc);
