@@ -42,7 +42,6 @@
     #define YY_USER_ACTION  loc.columns(yyleng);
 
     // Global variable used to maintain the current location.
-    int count;
     string currentString;
     location initPos;
     location loc;
@@ -89,16 +88,11 @@ vertical_blank ({lf}|{ff}|{cr})
                 BEGIN(QUOTE);
                 currentString = "";
                 stringLocation.push(loc);
+                loc.step();
             }
 
-<QUOTE>"\"" {
-                BEGIN(INITIAL);
-                initPos = stringLocation.top();
-                stringLocation.pop();
-                return Parser::make_STRING(currentString,initPos);
-}
-
 <QUOTE>"\\\"" {
+    loc.step();
     currentString += "\\x22";
 }
 
@@ -107,37 +101,44 @@ vertical_blank ({lf}|{ff}|{cr})
 }
 
 <QUOTE>"\\b" {
+    loc.step();
     currentString += "\\x08";
 }
 
 <QUOTE>"\\t" {
+    loc.step();
     currentString += "\\x09";
 }
 
 <QUOTE>"\\r" {
+    loc.step();
     currentString += "\\x0d";
 }
 
 <QUOTE>"\\x"  {
+    loc.step();
     currentString += yytext;
 }
 
 <QUOTE>"\\"({vertical_blank})+({horizontal_blank})* {
     loc.lines();
+    loc.columns(yyleng-2);
     loc.step();
 }
 
 <QUOTE>"\\\\" {
+    loc.step();
     currentString += "\\x5c";
 }
 
 <QUOTE>"\\"x{hex_digit}{hex_digit}+ {
     currentString += yytext;
+    loc.step();
 }
 
     /* String error handling */
 
-<QUOTE>"\\"{letter}+ {
+<QUOTE>"\\" {
     print_error(loc.begin,"unvalid escape character in string");
     return Parser::make_YYerror(loc);
 }
@@ -151,13 +152,23 @@ vertical_blank ({lf}|{ff}|{cr})
     initPos = stringLocation.top();
     stringLocation.pop();
     print_error(initPos.begin, "unclosed double quote");
-    return Parser::make_YYEOF(loc);
+    BEGIN(INITIAL);
+    return Parser::make_YYerror(initPos);
 }
 
     /* Other valid characters */
 
+<QUOTE>"\"" {
+                BEGIN(INITIAL);
+                initPos = stringLocation.top();
+                stringLocation.pop();
+                loc.step();
+                return Parser::make_STRING(currentString,initPos);
+}
+
 <QUOTE>.  {
     currentString += yytext;
+    loc.step();
 }
 
 
@@ -167,7 +178,7 @@ vertical_blank ({lf}|{ff}|{cr})
 
 <COMMENTS>{vertical_blank}+ {
                 BEGIN(INITIAL);
-                loc.lines(); loc.step();
+                loc.lines(yyleng); loc.step();
 }
 
 <COMMENTS>. {         
@@ -176,40 +187,43 @@ vertical_blank ({lf}|{ff}|{cr})
 "(*"        {
                 BEGIN(MULTICOMMENTS);
                 commentLocation.push(loc);
-                count = 1;
+                loc.step();
 }
 
 <MULTICOMMENTS>"(*" {
     commentLocation.push(loc);
-    count++;
+    loc.step();
 }
 
-<MULTICOMMENTS>{vertical_blank}+ {
+<MULTICOMMENTS>{vertical_blank}+{horizontal_blank}* {
     loc.lines();
+    loc.columns(yyleng-1);
+    loc.step();
 }
+
 
 <MULTICOMMENTS>"*)" {
     commentLocation.pop();
-    count--;
-    if(count == 0){
+    if(commentLocation.empty()){
         BEGIN(INITIAL);
     }
+    loc.step();
 }
 
 <MULTICOMMENTS><<EOF>> {
     initPos = commentLocation.top();
     commentLocation.pop();
     print_error(initPos.begin, "unclosed multiline comments");
-    return Parser::make_YYEOF(loc);
+    BEGIN(INITIAL);
+    return Parser::make_YYerror(initPos);
 }
 
 <MULTICOMMENTS>. {
-    
 }
 
     /* White spaces */
 
-{horizontal_blank}    loc.step();
+{horizontal_blank}     loc.step();
 {vertical_blank}+      loc.lines(yyleng); loc.step();
 
     /* Operators */
@@ -274,7 +288,7 @@ vertical_blank ({lf}|{ff}|{cr})
     /* Invalid characters */
 .           {
                 print_error(loc.begin, "invalid character: " + string(yytext));
-                return Parser::make_YYerror(loc);
+                return Parser::make_ERROR(loc);
 }
     
     /* End of file */

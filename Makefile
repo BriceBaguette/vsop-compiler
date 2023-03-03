@@ -4,7 +4,7 @@ CXXFLAGS 		= -Wall -Wextra
 
 BISONFLAGS 		= -d
 
-EXEC			= vsop
+EXEC			= vsopc
 
 SRC				= main.cpp \
 				  driver.cpp \
@@ -13,8 +13,9 @@ SRC				= main.cpp \
 
 OBJ	  			= $(SRC:.cpp=.o)
 
+install-tools:
 
-all: $(EXEC)
+vsopc: $(EXEC)
 
 main.o: driver.hpp parser.hpp
 
