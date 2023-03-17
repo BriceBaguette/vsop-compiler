@@ -288,7 +288,7 @@ vertical_blank ({lf}|{ff}|{cr})
     /* Invalid characters */
 .           {
                 print_error(loc.begin, "invalid character: " + string(yytext));
-                return Parser::make_ERROR(loc);
+                return Parser::make_YYerror(loc);
 }
     
     /* End of file */
