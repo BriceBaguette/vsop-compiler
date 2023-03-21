@@ -409,6 +409,10 @@ namespace VSOP {
       // "object-identifier"
       // TYPEIDENTIFIER
       // "string-literal"
+      // type-id
+      // object-id
+      // init
+      // formal-aux
       char dummy2[sizeof (std::string)];
     };
 
@@ -501,7 +505,8 @@ namespace VSOP {
     OBJECTIDENTIFIER = 40,         // "object-identifier"
     TYPEIDENTIFIER = 41,           // TYPEIDENTIFIER
     NUMBER = 42,                   // "integer-literal"
-    STRING = 43                    // "string-literal"
+    STRING = 43,                   // "string-literal"
+    init = 46                      // init
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -518,7 +523,7 @@ namespace VSOP {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 44, ///< Number of tokens.
+        YYNTOKENS = 54, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -564,8 +569,18 @@ namespace VSOP {
         S_TYPEIDENTIFIER = 41,                   // TYPEIDENTIFIER
         S_NUMBER = 42,                           // "integer-literal"
         S_STRING = 43,                           // "string-literal"
-        S_YYACCEPT = 44,                         // $accept
-        S_unit = 45                              // unit
+        S_44_type_id = 44,                       // type-id
+        S_45_object_id = 45,                     // object-id
+        S_init = 46,                             // init
+        S_47_formal_aux = 47,                    // formal-aux
+        S_48_bool_ = 48,                         // "bool"
+        S_49_or_ = 49,                           // "or"
+        S_50_ = 50,                              // "!="
+        S_51_ = 51,                              // ">"
+        S_52_ = 52,                              // ">="
+        S_53_mod_ = 53,                          // "mod"
+        S_YYACCEPT = 54,                         // $accept
+        S_unit = 55                              // unit
       };
     };
 
@@ -609,6 +624,10 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
+      case symbol_kind::S_44_type_id: // type-id
+      case symbol_kind::S_45_object_id: // object-id
+      case symbol_kind::S_init: // init
+      case symbol_kind::S_47_formal_aux: // formal-aux
         value.move< std::string > (std::move (that.value));
         break;
 
@@ -692,6 +711,10 @@ switch (yykind)
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
+      case symbol_kind::S_44_type_id: // type-id
+      case symbol_kind::S_45_object_id: // object-id
+      case symbol_kind::S_init: // init
+      case symbol_kind::S_47_formal_aux: // formal-aux
         value.template destroy< std::string > ();
         break;
 
@@ -793,7 +816,8 @@ switch (yykind)
 #endif
       {
         YY_ASSERT (tok == token::YYEOF
-                   || (token::YYerror <= tok && tok <= token::WHILE));
+                   || (token::YYerror <= tok && tok <= token::WHILE)
+                   || (303 <= tok && tok <= 308));
       }
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, int v, location_type l)
@@ -814,7 +838,7 @@ switch (yykind)
 #endif
       {
         YY_ASSERT ((token::OBJECTIDENTIFIER <= tok && tok <= token::TYPEIDENTIFIER)
-                   || tok == token::STRING);
+                   || (token::STRING <= tok && tok <= 302));
       }
     };
 
@@ -1527,6 +1551,21 @@ switch (yykind)
         return symbol_type (token::STRING, v, l);
       }
 #endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_init (std::string v, location_type l)
+      {
+        return symbol_type (token::init, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_init (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::init, v, l);
+      }
+#endif
 
 
   private:
@@ -1865,6 +1904,10 @@ switch (yykind)
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
+      case symbol_kind::S_44_type_id: // type-id
+      case symbol_kind::S_45_object_id: // object-id
+      case symbol_kind::S_init: // init
+      case symbol_kind::S_47_formal_aux: // formal-aux
         value.copy< std::string > (YY_MOVE (that.value));
         break;
 
@@ -1904,6 +1947,10 @@ switch (yykind)
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
+      case symbol_kind::S_44_type_id: // type-id
+      case symbol_kind::S_45_object_id: // object-id
+      case symbol_kind::S_init: // init
+      case symbol_kind::S_47_formal_aux: // formal-aux
         value.move< std::string > (YY_MOVE (s.value));
         break;
 
@@ -1970,7 +2017,7 @@ switch (yykind)
 
 #line 19 "vsop.y"
 } // VSOP
-#line 1974 "parser.hpp"
+#line 2021 "parser.hpp"
 
 
 

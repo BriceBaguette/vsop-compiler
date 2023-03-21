@@ -106,10 +106,10 @@ static void print_token(Parser::symbol_type token)
     case Parser::token::STRING:
     {
         string id = token.value.as<string>();
-        cout << "," << "\"" << id << "\"";
+        cout << ","
+             << "\"" << id << "\"";
         break;
     }
-
 
     default:
         break;
@@ -132,7 +132,10 @@ int Driver::lex()
             break;
 
         if ((Parser::token_type)token.type_get() != Parser::token::YYerror)
+        {
             tokens.push_back(token);
+            print_token(token);
+        }
 
         else
             error = 1;

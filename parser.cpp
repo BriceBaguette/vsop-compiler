@@ -216,6 +216,10 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
+      case symbol_kind::S_44_type_id: // type-id
+      case symbol_kind::S_45_object_id: // object-id
+      case symbol_kind::S_init: // init
+      case symbol_kind::S_47_formal_aux: // formal-aux
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
         break;
 
@@ -241,6 +245,10 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
+      case symbol_kind::S_44_type_id: // type-id
+      case symbol_kind::S_45_object_id: // object-id
+      case symbol_kind::S_init: // init
+      case symbol_kind::S_47_formal_aux: // formal-aux
         value.move< std::string > (YY_MOVE (that.value));
         break;
 
@@ -266,6 +274,10 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
+      case symbol_kind::S_44_type_id: // type-id
+      case symbol_kind::S_45_object_id: // object-id
+      case symbol_kind::S_init: // init
+      case symbol_kind::S_47_formal_aux: // formal-aux
         value.copy< std::string > (that.value);
         break;
 
@@ -290,6 +302,10 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
+      case symbol_kind::S_44_type_id: // type-id
+      case symbol_kind::S_45_object_id: // object-id
+      case symbol_kind::S_init: // init
+      case symbol_kind::S_47_formal_aux: // formal-aux
         value.move< std::string > (that.value);
         break;
 
@@ -559,6 +575,10 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
+      case symbol_kind::S_44_type_id: // type-id
+      case symbol_kind::S_45_object_id: // object-id
+      case symbol_kind::S_init: // init
+      case symbol_kind::S_47_formal_aux: // formal-aux
         yylhs.value.emplace< std::string > ();
         break;
 
@@ -583,13 +603,13 @@ namespace VSOP {
           switch (yyn)
             {
   case 2: // unit: %empty
-#line 116 "vsop.y"
+#line 120 "vsop.y"
               {}
-#line 589 "parser.cpp"
+#line 609 "parser.cpp"
     break;
 
 
-#line 593 "parser.cpp"
+#line 613 "parser.cpp"
 
             default:
               break;
@@ -821,13 +841,13 @@ namespace VSOP {
   const signed char
   Parser::yystos_[] =
   {
-       0,    45,     0
+       0,    55,     0
   };
 
   const signed char
   Parser::yyr1_[] =
   {
-       0,    44,    45
+       0,    54,    55
   };
 
   const signed char
@@ -850,8 +870,9 @@ namespace VSOP {
   "\"extends\"", "\"false\"", "\"in\"", "\"int32\"", "\"isnull\"",
   "\"let\"", "\"new\"", "\"not\"", "\"self\"", "\"string\"", "\"true\"",
   "\"then\"", "\"unit\"", "\"while\"", "\"object-identifier\"",
-  "TYPEIDENTIFIER", "\"integer-literal\"", "\"string-literal\"", "$accept",
-  "unit", YY_NULLPTR
+  "TYPEIDENTIFIER", "\"integer-literal\"", "\"string-literal\"", "type-id",
+  "object-id", "init", "formal-aux", "\"bool\"", "\"or\"", "\"!=\"",
+  "\">\"", "\">=\"", "\"mod\"", "$accept", "unit", YY_NULLPTR
   };
 #endif
 
@@ -860,7 +881,7 @@ namespace VSOP {
   const signed char
   Parser::yyrline_[] =
   {
-       0,   116,   116
+       0,   120,   120
   };
 
   void
@@ -893,9 +914,9 @@ namespace VSOP {
 
 #line 19 "vsop.y"
 } // VSOP
-#line 897 "parser.cpp"
+#line 918 "parser.cpp"
 
-#line 117 "vsop.y"
+#line 210 "vsop.y"
 
 // User code
 void VSOP::Parser::error(const location_type& l, const std::string& m)

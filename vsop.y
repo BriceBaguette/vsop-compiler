@@ -102,6 +102,10 @@
 %token <std::string> TYPEIDENTIFIER "type-identifier"
 %token <int> NUMBER "integer-literal"
 %token <std::string> STRING "string-literal"
+%token <std::string> type-id 
+%token <std::string> object-id   
+%token <std::string> init
+%token <std::string> formal-aux
 %nterm <int> exp
 
 // Precedence
@@ -114,6 +118,95 @@
 %start unit;
 unit: 
     %empty    {}
+
+program: class { class };
+
+class:          "class" type-id extends "{" class-body;
+
+extends:     "extends" type_id
+
+class-body:     "}" 
+                    | field ";" class-body
+                    | method class-body;
+
+field:           object-id ":" type init ";";
+
+method:          object-id "(" formals ")" ":" type block;
+
+type:            type-id | "int32" | "bool" | "string" | "unit";
+
+object_id:		OBJECTIDENTIFIER
+				| TYPEIDENTIFIER
+				{ 
+					cout << "syntax error, unexpected type-identifier ";
+				};
+
+type_id:		TYPEIDENTIFIER
+				| OBJECTIDENTIFIER
+				{ 
+                    cout << "syntax error, unexpected object-identifier ";
+				};
+
+formals:     "(" ")"    
+            | formal-aux;
+
+formals-aux:    formal ")"
+				| formal "," formals-aux
+
+formal:         object-id ":" type;
+
+block:          "{" expr block-aux "}";
+
+block-aux:      "," expr block-aux;
+
+        expr: "if" expr "then" expr "else" expr 
+                | "while" expr "do" expr
+                | "let" object-id ":" type "<-" expr "in" expr
+                | object-id "<-" expr
+                | "not" expr
+                | "-" expr
+                | "isnull" expr
+                | object-id "(" args ")"
+                | expr "." object-id "(" args ")"
+                | "new" type-id
+                | object-id
+                | "self"
+                | literal
+                | "(" ")"
+                | "(" expr ")"
+                | block;
+
+if: %empty
+
+else: %empty
+
+while: %empty
+
+let: %empty
+
+op:			expr "and" expr
+				| expr "or" expr
+				| expr "=" expr
+				| expr "!=" expr
+				| expr "<" expr
+				| expr "<=" expr
+				| expr ">" expr
+				| expr ">=" expr
+				| expr "+" expr
+				| expr "-" expr
+				| expr "*" expr
+				| expr "/" expr
+				| expr "^" expr
+				| expr "mod" expr;
+
+
+args:           expr args-aux ;
+
+args-aux:   "," expr args-aux;
+
+literal:         "integer-literal" | "string-literal" | boolean-literal;
+boolean-literal:        "true" | "false";
+
 %%
 // User code
 void VSOP::Parser::error(const location_type& l, const std::string& m)
