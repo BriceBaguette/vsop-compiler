@@ -39,7 +39,7 @@
 // C++ code put inside header file
 %code requires {
     #include <string>
-
+    #include "ast.hpp"
     namespace VSOP
     {
         class Driver;
@@ -51,7 +51,6 @@
 
 %code {
     #include "driver.hpp"
-
     using namespace std;
 }
 
@@ -102,16 +101,27 @@
 %token <std::string> TYPEIDENTIFIER "type-identifier"
 %token <int> NUMBER "integer-literal"
 %token <std::string> STRING "string-literal"
-%token <std::string> type-id 
-%token <std::string> object-id   
-%token <std::string> init
-%token <std::string> formal-aux
+%type <Expr> type-id 
+%type <Expr> object-id   
+%type <Expr> init
+%type <std::string> formal-aux
+%type <Expr> bin-op
+%type <Expr> un-op
+%type <Expr> expr
+%type <Expr> if
+%type <Expr> while
 %nterm <int> exp
 
 // Precedence
+%right ASSIGN;
+%left AND;
+%right NOT;
+%nonassoc EQUAL LOWEREQUAL LOWER;
 %left "+" "-"; // Could also do: %left PLUS MINUS
 %left "*" "/";
-
+%right ISNULL;
+%right POW;
+%left DOT;
 %%
 // Grammar rules
 
@@ -129,9 +139,9 @@ class-body:     "}"
                     | field ";" class-body
                     | method class-body;
 
-field:           object-id ":" type init ";";
+field:           object-id ":" type init;
 
-method:          object-id "(" formals ")" ":" type block;
+method:          object-id formals ":" type block;
 
 type:            type-id | "int32" | "bool" | "string" | "unit";
 
@@ -148,63 +158,80 @@ type_id:		TYPEIDENTIFIER
 				};
 
 formals:     "(" ")"    
-            | formal-aux;
+            | "(" formal-aux;
 
 formals-aux:    formal ")"
-				| formal "," formals-aux
+				| formal "," formals-aux;
 
 formal:         object-id ":" type;
 
-block:          "{" expr block-aux "}";
+block:          "{" expr block-aux;
 
-block-aux:      "," expr block-aux;
+block-aux:      expr "}"
+                | expr block-aux;
 
-        expr: "if" expr "then" expr "else" expr 
-                | "while" expr "do" expr
-                | "let" object-id ":" type "<-" expr "in" expr
+        expr:   if
+                | while
+                | let
                 | object-id "<-" expr
-                | "not" expr
-                | "-" expr
-                | "isnull" expr
-                | object-id "(" args ")"
-                | expr "." object-id "(" args ")"
+                | object-id "(" args
+                | expr "." object-id "(" args 
                 | "new" type-id
                 | object-id
                 | "self"
                 | literal
                 | "(" ")"
                 | "(" expr ")"
-                | block;
+                | block
+                | bin-op ";"
+                | un-op ";";
 
-if: %empty
+if: expr "then" expr
+    { $$ = new If($1,$3)}
+    | expr "then" expr "else" expr
+    { $$ = new If($1,$3,$5)};
 
-else: %empty
+while: expr "do" expr
+       { $$ = new While($1,$3)};
 
-while: %empty
 
 let: %empty
 
-op:			expr "and" expr
+bin-op:			expr "and" expr
+                { $$ = new BinOp($1, "and",$3) }
 				| expr "or" expr
+                { $$ = new BinOp($1,"or",$3) }
 				| expr "=" expr
+                { $$ = new BinOp($1,"=",$3) }
 				| expr "!=" expr
+                { $$ = new BinOp($1,"!=",$3) }
 				| expr "<" expr
+                { $$ = new BinOp($1,"<",$3) }
 				| expr "<=" expr
+                { $$ = new BinOp($1,"<=",$3) }
 				| expr ">" expr
+                { $$ = new BinOp($1,">",$3) }
 				| expr ">=" expr
+                { $$ = new BinOp($1,">=",$3) }
 				| expr "+" expr
+                { $$ = new BinOp($1,"+",$3) }
 				| expr "-" expr
+                { $$ = new BinOp($1,"-",$3) }
 				| expr "*" expr
+                { $$ = new BinOp($1,"*",$3) }
 				| expr "/" expr
+                { $$ = new BinOp($1,"/",$3) }
 				| expr "^" expr
-				| expr "mod" expr;
+                { $$ = new BinOp($1,"^",$3) };
 
+un-op:          "not" expr
+                | "-" expr
+                | "isnull" expr;
 
-args:           expr args-aux ;
+args:       expr ")" 
+            | expr "," args;
 
-args-aux:   "," expr args-aux;
-
-literal:         "integer-literal" | "string-literal" | boolean-literal;
+literal:         NUMBER | STRING | boolean-literal;
 boolean-literal:        "true" | "false";
 
 %%

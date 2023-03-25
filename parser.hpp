@@ -48,7 +48,7 @@
 #line 40 "vsop.y"
 
     #include <string>
-
+    #include "ast.hpp"
     namespace VSOP
     {
         class Driver;
@@ -403,17 +403,19 @@ namespace VSOP {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
+      // type-id
+      char dummy1[sizeof (Type)];
+
       // "integer-literal"
-      char dummy1[sizeof (int)];
+      char dummy2[sizeof (int)];
 
       // "object-identifier"
       // TYPEIDENTIFIER
       // "string-literal"
-      // type-id
       // object-id
       // init
       // formal-aux
-      char dummy2[sizeof (std::string)];
+      char dummy3[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -523,7 +525,7 @@ namespace VSOP {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 54, ///< Number of tokens.
+        YYNTOKENS = 53, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -578,9 +580,8 @@ namespace VSOP {
         S_50_ = 50,                              // "!="
         S_51_ = 51,                              // ">"
         S_52_ = 52,                              // ">="
-        S_53_mod_ = 53,                          // "mod"
-        S_YYACCEPT = 54,                         // $accept
-        S_unit = 55                              // unit
+        S_YYACCEPT = 53,                         // $accept
+        S_unit = 54                              // unit
       };
     };
 
@@ -617,6 +618,10 @@ namespace VSOP {
       {
         switch (this->kind ())
     {
+      case symbol_kind::S_44_type_id: // type-id
+        value.move< Type > (std::move (that.value));
+        break;
+
       case symbol_kind::S_NUMBER: // "integer-literal"
         value.move< int > (std::move (that.value));
         break;
@@ -624,7 +629,6 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_44_type_id: // type-id
       case symbol_kind::S_45_object_id: // object-id
       case symbol_kind::S_init: // init
       case symbol_kind::S_47_formal_aux: // formal-aux
@@ -650,6 +654,20 @@ namespace VSOP {
 #else
       basic_symbol (typename Base::kind_type t, const location_type& l)
         : Base (t)
+        , location (l)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, Type&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const Type& v, const location_type& l)
+        : Base (t)
+        , value (v)
         , location (l)
       {}
 #endif
@@ -704,6 +722,10 @@ namespace VSOP {
         // Value type destructor.
 switch (yykind)
     {
+      case symbol_kind::S_44_type_id: // type-id
+        value.template destroy< Type > ();
+        break;
+
       case symbol_kind::S_NUMBER: // "integer-literal"
         value.template destroy< int > ();
         break;
@@ -711,7 +733,6 @@ switch (yykind)
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_44_type_id: // type-id
       case symbol_kind::S_45_object_id: // object-id
       case symbol_kind::S_init: // init
       case symbol_kind::S_47_formal_aux: // formal-aux
@@ -817,7 +838,17 @@ switch (yykind)
       {
         YY_ASSERT (tok == token::YYEOF
                    || (token::YYerror <= tok && tok <= token::WHILE)
-                   || (303 <= tok && tok <= 308));
+                   || (303 <= tok && tok <= 307));
+      }
+#if 201103L <= YY_CPLUSPLUS
+      symbol_type (int tok, Type v, location_type l)
+        : super_type(token_type (tok), std::move (v), std::move (l))
+#else
+      symbol_type (int tok, const Type& v, const location_type& l)
+        : super_type(token_type (tok), v, l)
+#endif
+      {
+        YY_ASSERT (tok == 299);
       }
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, int v, location_type l)
@@ -838,7 +869,8 @@ switch (yykind)
 #endif
       {
         YY_ASSERT ((token::OBJECTIDENTIFIER <= tok && tok <= token::TYPEIDENTIFIER)
-                   || (token::STRING <= tok && tok <= 302));
+                   || tok == token::STRING
+                   || (300 <= tok && tok <= 302));
       }
     };
 
@@ -1897,6 +1929,10 @@ switch (yykind)
   {
     switch (this->kind ())
     {
+      case symbol_kind::S_44_type_id: // type-id
+        value.copy< Type > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_NUMBER: // "integer-literal"
         value.copy< int > (YY_MOVE (that.value));
         break;
@@ -1904,7 +1940,6 @@ switch (yykind)
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_44_type_id: // type-id
       case symbol_kind::S_45_object_id: // object-id
       case symbol_kind::S_init: // init
       case symbol_kind::S_47_formal_aux: // formal-aux
@@ -1940,6 +1975,10 @@ switch (yykind)
     super_type::move (s);
     switch (this->kind ())
     {
+      case symbol_kind::S_44_type_id: // type-id
+        value.move< Type > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_NUMBER: // "integer-literal"
         value.move< int > (YY_MOVE (s.value));
         break;
@@ -1947,7 +1986,6 @@ switch (yykind)
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_44_type_id: // type-id
       case symbol_kind::S_45_object_id: // object-id
       case symbol_kind::S_init: // init
       case symbol_kind::S_47_formal_aux: // formal-aux
@@ -2017,7 +2055,7 @@ switch (yykind)
 
 #line 19 "vsop.y"
 } // VSOP
-#line 2021 "parser.hpp"
+#line 2059 "parser.hpp"
 
 
 

@@ -17,11 +17,11 @@ install-tools:
 
 vsopc: $(EXEC)
 
-main.o: driver.hpp parser.hpp
+main.o: driver.hpp parser.hpp ast.hpp
 
-driver.o: driver.hpp parser.hpp
+driver.o: driver.hpp parser.hpp ast.hpp
 
-parser.o: driver.hpp parser.hpp
+parser.o: driver.hpp parser.hpp ast.hpp
 
 lexer.o: driver.hpp parser.hpp
 

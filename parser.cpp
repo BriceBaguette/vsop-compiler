@@ -45,10 +45,9 @@
 #line 52 "vsop.y"
 
     #include "driver.hpp"
-
     using namespace std;
 
-#line 52 "parser.cpp"
+#line 51 "parser.cpp"
 
 
 #ifndef YY_
@@ -141,7 +140,7 @@
 
 #line 19 "vsop.y"
 namespace VSOP {
-#line 145 "parser.cpp"
+#line 144 "parser.cpp"
 
   /// Build a parser object.
   Parser::Parser (VSOP::Driver &driver_yyarg)
@@ -209,6 +208,10 @@ namespace VSOP {
   {
     switch (that.kind ())
     {
+      case symbol_kind::S_44_type_id: // type-id
+        value.YY_MOVE_OR_COPY< Type > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_NUMBER: // "integer-literal"
         value.YY_MOVE_OR_COPY< int > (YY_MOVE (that.value));
         break;
@@ -216,7 +219,6 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_44_type_id: // type-id
       case symbol_kind::S_45_object_id: // object-id
       case symbol_kind::S_init: // init
       case symbol_kind::S_47_formal_aux: // formal-aux
@@ -238,6 +240,10 @@ namespace VSOP {
   {
     switch (that.kind ())
     {
+      case symbol_kind::S_44_type_id: // type-id
+        value.move< Type > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_NUMBER: // "integer-literal"
         value.move< int > (YY_MOVE (that.value));
         break;
@@ -245,7 +251,6 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_44_type_id: // type-id
       case symbol_kind::S_45_object_id: // object-id
       case symbol_kind::S_init: // init
       case symbol_kind::S_47_formal_aux: // formal-aux
@@ -267,6 +272,10 @@ namespace VSOP {
     state = that.state;
     switch (that.kind ())
     {
+      case symbol_kind::S_44_type_id: // type-id
+        value.copy< Type > (that.value);
+        break;
+
       case symbol_kind::S_NUMBER: // "integer-literal"
         value.copy< int > (that.value);
         break;
@@ -274,7 +283,6 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_44_type_id: // type-id
       case symbol_kind::S_45_object_id: // object-id
       case symbol_kind::S_init: // init
       case symbol_kind::S_47_formal_aux: // formal-aux
@@ -295,6 +303,10 @@ namespace VSOP {
     state = that.state;
     switch (that.kind ())
     {
+      case symbol_kind::S_44_type_id: // type-id
+        value.move< Type > (that.value);
+        break;
+
       case symbol_kind::S_NUMBER: // "integer-literal"
         value.move< int > (that.value);
         break;
@@ -302,7 +314,6 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_44_type_id: // type-id
       case symbol_kind::S_45_object_id: // object-id
       case symbol_kind::S_init: // init
       case symbol_kind::S_47_formal_aux: // formal-aux
@@ -568,6 +579,10 @@ namespace VSOP {
          when using variants.  */
       switch (yyr1_[yyn])
     {
+      case symbol_kind::S_44_type_id: // type-id
+        yylhs.value.emplace< Type > ();
+        break;
+
       case symbol_kind::S_NUMBER: // "integer-literal"
         yylhs.value.emplace< int > ();
         break;
@@ -575,7 +590,6 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_44_type_id: // type-id
       case symbol_kind::S_45_object_id: // object-id
       case symbol_kind::S_init: // init
       case symbol_kind::S_47_formal_aux: // formal-aux
@@ -603,13 +617,13 @@ namespace VSOP {
           switch (yyn)
             {
   case 2: // unit: %empty
-#line 120 "vsop.y"
+#line 127 "vsop.y"
               {}
-#line 609 "parser.cpp"
+#line 623 "parser.cpp"
     break;
 
 
-#line 613 "parser.cpp"
+#line 627 "parser.cpp"
 
             default:
               break;
@@ -841,13 +855,13 @@ namespace VSOP {
   const signed char
   Parser::yystos_[] =
   {
-       0,    55,     0
+       0,    54,     0
   };
 
   const signed char
   Parser::yyr1_[] =
   {
-       0,    54,    55
+       0,    53,    54
   };
 
   const signed char
@@ -872,7 +886,7 @@ namespace VSOP {
   "\"then\"", "\"unit\"", "\"while\"", "\"object-identifier\"",
   "TYPEIDENTIFIER", "\"integer-literal\"", "\"string-literal\"", "type-id",
   "object-id", "init", "formal-aux", "\"bool\"", "\"or\"", "\"!=\"",
-  "\">\"", "\">=\"", "\"mod\"", "$accept", "unit", YY_NULLPTR
+  "\">\"", "\">=\"", "$accept", "unit", YY_NULLPTR
   };
 #endif
 
@@ -881,7 +895,7 @@ namespace VSOP {
   const signed char
   Parser::yyrline_[] =
   {
-       0,   120,   120
+       0,   127,   127
   };
 
   void
@@ -914,9 +928,9 @@ namespace VSOP {
 
 #line 19 "vsop.y"
 } // VSOP
-#line 918 "parser.cpp"
+#line 932 "parser.cpp"
 
-#line 210 "vsop.y"
+#line 222 "vsop.y"
 
 // User code
 void VSOP::Parser::error(const location_type& l, const std::string& m)
