@@ -2,7 +2,7 @@
 #include <string>
 #include <map>
 #include <list>
-
+#include <iterator>
 
 using namespace std;
 
@@ -10,18 +10,15 @@ class Node
 {
 public:
     Node() {}
-    virtual ~Node() {}
-    virtual void print();
 };
 
 class Type : public Node
 {
 public:
-    std::string name;
+    string name;
 
-    Type(std::string n) {
-        name = n;
-    }
+    Type(string n) : name(n) {}
+
     void print()
     {
         cout << name;
@@ -31,6 +28,8 @@ public:
 class Expr : public Node
 {
 public:
+    Expr() {}
+
     virtual void print()
     {
     }
@@ -39,84 +38,110 @@ public:
 class Block : public Expr
 {
 public:
-    list<Expr> exprs;
+    list<Expr *> exprs;
 
-    Block(list<Expr> ex){
-        exprs = ex;
-    }
+    Block(list<Expr *> ex) : exprs(ex) {}
 
     void print()
     {
-
-        exprs.print();
+        bool first = true;
+        cout << "[";
+        for (list<Expr *>::iterator i = exprs.begin(); i != exprs.end(); ++i)
+        {
+            if (first)
+            {
+                first = false;
+                (*i)->print();
+            }
+            else
+            {
+                cout << ",";
+                (*i)->print();
+            }
+        }
+        cout << "]" << endl;
     }
 };
 
 class Formal : public Node
 {
 public:
-    std::string name;
-    Type type;
+    string name;
+    Type *type;
 
-    Formal(std::string n, Type t) {
-        type = t;
-        name = n;
-    }
+    Formal(string n, Type *t) : name(n), type(t) {}
 
     void print()
     {
-        cout << name << ":" << type << endl;
+        cout << name << ":";
+        type->print();
+        cout << endl;
     }
 };
 
 class Field : public Node
 {
 public:
-    std::string name;
-    std::string type;
-    Expr initExpr;
+    string name;
+    Type *type;
+    Expr *initExpr;
 
-    Field(std::string n, std::string t)
+    Field(string n, Type *t) : name(n), type(t)
     {
-        name = n;
-        type = t;
-        initExpr = NULL
+        initExpr = NULL;
     }
-    Field(std::string n, std::string t, Expr initE)
+    Field(string n, Type *t, Expr *initE) : name(n), type(t), initExpr(initE)
     {
-        name = n;
-        type = t;
-        initExpr = initE
     }
+
     void print()
     {
-        if (!initExpr)
-            cout << "Field(" << name << "," << type << ")" << endl;
-        else cout << "Field(" << name << "," << type << "," << initExpr << ")" << endl;
+        if (initExpr == NULL)
+        {
+            cout << "Field(" << name << ",";
+            type->print();
+            cout << ")" << endl;
+        }
+        else
+        {
+            cout << "Field(" << name << ",";
+            type->print();
+            cout << ",";
+            initExpr->print();
+            cout << ")" << endl;
+        }
     }
 };
 
 class Method : public Node
 {
 public:
-    std::string name;
-    list<Formal> formals;
-    Block block;
-    std::string returnType;
+    string name;
+    list<Formal *> formals;
+    Block *block;
+    string returnType;
 
-    Method(std::string n, list<Formal> f, Block b, std::string ret){
-        name = n;
-        formals = f;
-        block = b;
-        returnType = ret;
-    }
+    Method(string n, list<Formal *> f, Block *b, string ret) : name(n), formals(f), block(b), returnType(ret) {}
 
     void print()
     {
+        bool first = true;
         cout << "Method(" << name << "[";
-        formals.print();
-        cout << "]" << returnType;
-        block.print();
+        for (list<Formal *>::iterator i = formals.begin(); i != formals.end(); ++i)
+        {
+            if (first)
+            {
+                first = false;
+                (*i)->print();
+            }
+            else
+            {
+                cout << ",";
+                (*i)->print();
+            }
+        }
+        cout << "], " << returnType << ", ";
+        block->print();
         cout << ")" << endl;
     }
 };
@@ -124,35 +149,53 @@ public:
 class Class : public Node
 {
 public:
-    std::string class_name;
-    std::string parent_class;
-    list<Field> fields;
-    list<Method> Methods;
+    string class_name;
+    string parent_class;
+    list<Field *> fields;
+    list<Method *> Methods;
 
-    Class(std::string class_n, list<Field> f, list<Method> M)
+    Class(string class_n, list<Field *> f, list<Method *> M) : class_name(class_n), fields(f), Methods(M)
     {
-        class_name = class_n;
-        parent_class = NULL;
-        fields = f;
-        Methods = M;
+        parent_class = "";
     }
-    Class(std::string class_n, std::string parent_c, list<Field> f, list<Method> M)
-    {
-        class_name = class_n;
-        parent_class = parent_c;
-        fields = f;
-        Methods = M;
-    }
+    Class(string class_n, string parent_c, list<Field *> f, list<Method *> M) : class_name(class_n), parent_class(parent_c), fields(f), Methods(M) {}
 
     void print()
     {
+        bool first = true;
         cout << "Class(" << class_name;
-        if (!parent_class)
+        if (parent_class == "")
             cout << "Object";
-        else cout << parent_class << "[";
-        fields.print();
-        cout << "]" << "[";
-        Methods.print();
+        else
+            cout << parent_class << "[";
+        for (list<Field *>::iterator i = fields.begin(); i != fields.end(); ++i)
+        {
+            if (first)
+            {
+                first = false;
+                (*i)->print();
+            }
+            else
+            {
+                cout << ",";
+                (*i)->print();
+            }
+        }
+        first = true;
+        cout << "], [";
+        for (list<Method *>::iterator i = Methods.begin(); i != Methods.end(); ++i)
+        {
+            if (first)
+            {
+                first = false;
+                (*i)->print();
+            }
+            else
+            {
+                cout << ",";
+                (*i)->print();
+            }
+        }
         cout << "] )" << endl;
     }
 };
@@ -160,16 +203,16 @@ public:
 class If : public Expr
 {
 public:
-    Expr condExpr;
-    Expr thenExpr;
-    Expr elseExpr;
+    Expr *condExpr;
+    Expr *thenExpr;
+    Expr *elseExpr;
 
-    If(Expr condExp, Expr thenExp)
+    If(Expr *condExp, Expr *thenExp)
     {
         condExpr = condExp;
         thenExpr = thenExp;
     }
-    If(Expr condExp, Expr thenExp, Expr elseExp)
+    If(Expr *condExp, Expr *thenExp, Expr *elseExp)
     {
         condExpr = condExp;
         thenExpr = thenExp;
@@ -177,19 +220,22 @@ public:
     }
     void print()
     {
-        if(!elseExpr){
+        if (elseExpr == NULL)
+        {
             cout << "If(";
-            condExpr.print();
+            condExpr->print();
             cout << ",";
-            thenExpr.print();
+            thenExpr->print();
             cout << ")" << endl;
-        }else {
+        }
+        else
+        {
             cout << "If(";
-            condExpr.print();
+            condExpr->print();
             cout << ",";
-            thenExpr.print();
+            thenExpr->print();
             cout << ",";
-            elseExpr.print();
+            elseExpr->print();
             cout << ")" << endl;
         }
     }
@@ -198,10 +244,10 @@ public:
 class While : public Expr
 {
 public:
-    Expr condExpr;
-    Expr bodyExpr;
+    Expr *condExpr;
+    Expr *bodyExpr;
 
-    While(Expr condExp, Expr bodyExp)
+    While(Expr *condExp, Expr *bodyExp)
     {
         condExpr = condExp;
         bodyExpr = bodyExp;
@@ -209,9 +255,9 @@ public:
     void print()
     {
         cout << "While(";
-        condExpr.print();
+        condExpr->print();
         cout << ",";
-        bodyExpr.print();
+        bodyExpr->print();
         cout << ")" << endl;
     }
 };
@@ -219,35 +265,37 @@ public:
 class Let : public Expr
 {
 public:
-    std::string name;
-    Type type;
-    Expr initExpr;
-    Expr scopeExpr;
+    string name;
+    Type *type;
+    Expr *initExpr;
+    Expr *scopeExpr;
 
-    Let(std::string n, Type t, Expr scopeE) {
-        name = n;
-        type = t;
+    Let(string n, Type *t, Expr *scopeE) : name(n), type(t), scopeExpr(scopeE)
+    {
         initExpr = NULL;
-        scopeExpr = scopeE;
     }
-    Let(std::string n, Type t, Expr initE, Expr scopeE) {
-        name = n;
-        type = t;
-        initExpr = initE;
-        scopeExpr = scopeE;
+    Let(string n, Type *t, Expr *initE, Expr *scopeE) : name(n), type(t), initExpr(initE), scopeExpr(scopeE)
+    {
     }
 
     void print()
     {
-        if(!initExpr){
-            cout << "Let(" << name << "," << type ",";
-            scopeExpr.print();
-            cout << ")" << endl;
-        }else {
-            cout << "Let(" << name << "," << type ",";
-            initExpr.print();
+        if (initExpr == NULL)
+        {
+            cout << "Let(" << name << ",";
+            type->print();
             cout << ",";
-            scopeExpr.print();
+            scopeExpr->print();
+            cout << ")" << endl;
+        }
+        else
+        {
+            cout << "Let(" << name << ",";
+            type->print();
+            cout << ",";
+            initExpr->print();
+            cout << ",";
+            scopeExpr->print();
             cout << ")" << endl;
         }
     }
@@ -256,60 +304,79 @@ public:
 class New : public Expr
 {
 public:
-    Type type;
+    Type *type;
 
-    New(Type t){
-        type = t;
+    New(Type *t) : type(t)
+    {
     }
 
     void print()
     {
-        cout << "New(" << type << ")" << endl;
+        cout << "New(";
+        type->print();
+        cout << ")" << endl;
     }
 };
 
 class Program : public Node
 {
 public:
-    list<Class> classes;
+    list<Class *> classes;
 
-    Program(list<Class> cls){
+    Program(list<Class *> cls)
+    {
         classes = cls;
     }
 
     void print()
     {
+        bool first = true;
         cout << "[";
-        classes.print();//rajouter , entre les classes
-        cout << "]";
+        for (list<Class *>::iterator i = classes.begin(); i != classes.end(); ++i)
+        {
+            if (first)
+            {
+                first = false;
+                (*i)->print();
+            }
+            else
+            {
+                cout << ",";
+                (*i)->print();
+            }
+        }
+        cout << "]" << endl;
     }
 };
 
 class Assign : public Node
 {
 public:
-    std::string name;
-    Expr expr;
+    string name;
+    Expr *expr;
 
-    Assign(std::string n, Expr ex) {
+    Assign(string n, Expr *ex)
+    {
         name = n;
         expr = ex;
     }
 
     void print()
     {
-        cout << "Assign(" << name "," << expr << ")" << endl;
+        cout << "Assign(" << name << ",";
+        expr->print();
+        cout << ")" << endl;
     }
 };
 
 class BinOp : public Expr
 {
 public:
-    std::string op;
-    Expr expr1;
-    Expr expr2;
+    string op;
+    Expr *expr1;
+    Expr *expr2;
 
-    BinOp(Expr exp1, std::string o, Expr exp2)
+    BinOp(Expr *exp1, string o, Expr *exp2)
     {
         op = o;
         expr1 = exp1;
@@ -318,10 +385,10 @@ public:
 
     void print()
     {
-        cout << "BinOp(" << op << "," ;
-        expr1.print();
+        cout << "BinOp(" << op << ",";
+        expr1->print();
         cout << ",";
-        expr2.print();
+        expr2->print();
         cout << ")" << endl;
     }
 };
@@ -329,10 +396,10 @@ public:
 class UnOp : public Expr
 {
 public:
-    std::string op;
-    Expr expr;
+    string op;
+    Expr *expr;
 
-    UnOp(std::string o, Expr exp)
+    UnOp(string o, Expr *exp)
     {
         op = o;
         expr = exp;
@@ -341,7 +408,7 @@ public:
     void print()
     {
         cout << "UnOp(" << op << ",";
-        expr.print();
+        expr->print();
         cout << ")" << endl;
     }
 };
@@ -349,17 +416,17 @@ public:
 class Call : public Expr
 {
 public:
-    std::string name;
-    Expr objExpr;
-    list<Expr> args;
+    string name;
+    Expr *objExpr;
+    list<Expr *> args;
 
-    Call(std::string n, list<Expr> arg)
+    Call(string n, list<Expr *> arg)
     {
         name = n;
         objExpr = NULL;
         args = arg;
     }
-    Call(std::string n, Expr objE, list<Expr> arg){}
+    Call(string n, Expr *objE, list<Expr *> arg)
     {
         name = n;
         objExpr = objE;
@@ -368,16 +435,46 @@ public:
 
     void print()
     {
-        if(objExpr!= NULL){
+        bool first = true;
+        if (objExpr != NULL)
+        {
             cout << "Call(";
-            objExpr.print();
+            objExpr->print();
             cout << "," << name << "[";
-            args.print();
-            cout << "]" << ")" << endl;
-        }else{
+            for (list<Expr *>::iterator i = args.begin(); i != args.end(); ++i)
+            {
+                if (first)
+                {
+                    first = false;
+                    (*i)->print();
+                }
+                else
+                {
+                    cout << ",";
+                    (*i)->print();
+                }
+            }
+            cout << "]"
+                 << ")" << endl;
+        }
+        else
+        {
             cout << "Call(self," << name << "[";
-            args.print();
-            cout << "]" << ")" << endl;
+            for (list<Expr *>::iterator i = args.begin(); i != args.end(); ++i)
+            {
+                if (first)
+                {
+                    first = false;
+                    (*i)->print();
+                }
+                else
+                {
+                    cout << ",";
+                    (*i)->print();
+                }
+            }
+            cout << "]"
+                 << ")" << endl;
         }
     }
 };
@@ -385,41 +482,58 @@ public:
 class Number : public Expr
 {
 public:
-    std::string num;
+    string num;
 
-    Number(float n){
-        num = n;
+    Number(int n)
+    {
+        num = to_string(n);
     }
 
-    void print(){
+    void print()
+    {
         cout << num << endl;
     }
-}
+};
 
 class String : public Expr
 {
 public:
-    std::string str;
+    string str;
 
-    String(std::string s){
+    String(string s)
+    {
         str = s;
     }
 
-    void print(){
+    void print()
+    {
         cout << str << endl;
     }
-}
+};
 
 class Bool : public Expr
 {
 public:
-    bool bo;
+    string bo;
 
-    Bool(bool b){
+    Bool(string b)
+    {
         bo = b;
     }
 
-    void print(){
+    void print()
+    {
         cout << bo << endl;
     }
-}
+};
+
+class Self : public Expr
+{
+public:
+    Self() {}
+
+    void print()
+    {
+        cout << "self" << endl;
+    }
+};

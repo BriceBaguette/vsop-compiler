@@ -208,8 +208,40 @@ namespace VSOP {
   {
     switch (that.kind ())
     {
-      case symbol_kind::S_44_type_id: // type-id
-        value.YY_MOVE_OR_COPY< Type > (YY_MOVE (that.value));
+      case symbol_kind::S_70_bin_op: // bin-op
+        value.YY_MOVE_OR_COPY< BinOp* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_block: // block
+      case symbol_kind::S_65_block_aux: // block-aux
+      case symbol_kind::S_expr: // expr
+      case symbol_kind::S_if: // if
+      case symbol_kind::S_while: // while
+      case symbol_kind::S_literal: // literal
+      case symbol_kind::S_74_boolean_literal: // boolean-literal
+        value.YY_MOVE_OR_COPY< Expr* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_field: // field
+        value.YY_MOVE_OR_COPY< Field* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_62_formals_aux: // formals-aux
+      case symbol_kind::S_formal: // formal
+        value.YY_MOVE_OR_COPY< Formal* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_let: // let
+        value.YY_MOVE_OR_COPY< Let* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_type: // type
+      case symbol_kind::S_60_type_id: // type-id
+        value.YY_MOVE_OR_COPY< Type* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_71_un_op: // un-op
+        value.YY_MOVE_OR_COPY< UnOp* > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_NUMBER: // "integer-literal"
@@ -217,11 +249,9 @@ namespace VSOP {
         break;
 
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
-      case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
+      case symbol_kind::S_TYPEIDENTIFIER: // "type-identifier"
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_45_object_id: // object-id
-      case symbol_kind::S_init: // init
-      case symbol_kind::S_47_formal_aux: // formal-aux
+      case symbol_kind::S_59_object_id: // object-id
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
         break;
 
@@ -240,8 +270,40 @@ namespace VSOP {
   {
     switch (that.kind ())
     {
-      case symbol_kind::S_44_type_id: // type-id
-        value.move< Type > (YY_MOVE (that.value));
+      case symbol_kind::S_70_bin_op: // bin-op
+        value.move< BinOp* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_block: // block
+      case symbol_kind::S_65_block_aux: // block-aux
+      case symbol_kind::S_expr: // expr
+      case symbol_kind::S_if: // if
+      case symbol_kind::S_while: // while
+      case symbol_kind::S_literal: // literal
+      case symbol_kind::S_74_boolean_literal: // boolean-literal
+        value.move< Expr* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_field: // field
+        value.move< Field* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_62_formals_aux: // formals-aux
+      case symbol_kind::S_formal: // formal
+        value.move< Formal* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_let: // let
+        value.move< Let* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_type: // type
+      case symbol_kind::S_60_type_id: // type-id
+        value.move< Type* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_71_un_op: // un-op
+        value.move< UnOp* > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_NUMBER: // "integer-literal"
@@ -249,11 +311,9 @@ namespace VSOP {
         break;
 
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
-      case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
+      case symbol_kind::S_TYPEIDENTIFIER: // "type-identifier"
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_45_object_id: // object-id
-      case symbol_kind::S_init: // init
-      case symbol_kind::S_47_formal_aux: // formal-aux
+      case symbol_kind::S_59_object_id: // object-id
         value.move< std::string > (YY_MOVE (that.value));
         break;
 
@@ -272,8 +332,40 @@ namespace VSOP {
     state = that.state;
     switch (that.kind ())
     {
-      case symbol_kind::S_44_type_id: // type-id
-        value.copy< Type > (that.value);
+      case symbol_kind::S_70_bin_op: // bin-op
+        value.copy< BinOp* > (that.value);
+        break;
+
+      case symbol_kind::S_block: // block
+      case symbol_kind::S_65_block_aux: // block-aux
+      case symbol_kind::S_expr: // expr
+      case symbol_kind::S_if: // if
+      case symbol_kind::S_while: // while
+      case symbol_kind::S_literal: // literal
+      case symbol_kind::S_74_boolean_literal: // boolean-literal
+        value.copy< Expr* > (that.value);
+        break;
+
+      case symbol_kind::S_field: // field
+        value.copy< Field* > (that.value);
+        break;
+
+      case symbol_kind::S_62_formals_aux: // formals-aux
+      case symbol_kind::S_formal: // formal
+        value.copy< Formal* > (that.value);
+        break;
+
+      case symbol_kind::S_let: // let
+        value.copy< Let* > (that.value);
+        break;
+
+      case symbol_kind::S_type: // type
+      case symbol_kind::S_60_type_id: // type-id
+        value.copy< Type* > (that.value);
+        break;
+
+      case symbol_kind::S_71_un_op: // un-op
+        value.copy< UnOp* > (that.value);
         break;
 
       case symbol_kind::S_NUMBER: // "integer-literal"
@@ -281,11 +373,9 @@ namespace VSOP {
         break;
 
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
-      case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
+      case symbol_kind::S_TYPEIDENTIFIER: // "type-identifier"
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_45_object_id: // object-id
-      case symbol_kind::S_init: // init
-      case symbol_kind::S_47_formal_aux: // formal-aux
+      case symbol_kind::S_59_object_id: // object-id
         value.copy< std::string > (that.value);
         break;
 
@@ -303,8 +393,40 @@ namespace VSOP {
     state = that.state;
     switch (that.kind ())
     {
-      case symbol_kind::S_44_type_id: // type-id
-        value.move< Type > (that.value);
+      case symbol_kind::S_70_bin_op: // bin-op
+        value.move< BinOp* > (that.value);
+        break;
+
+      case symbol_kind::S_block: // block
+      case symbol_kind::S_65_block_aux: // block-aux
+      case symbol_kind::S_expr: // expr
+      case symbol_kind::S_if: // if
+      case symbol_kind::S_while: // while
+      case symbol_kind::S_literal: // literal
+      case symbol_kind::S_74_boolean_literal: // boolean-literal
+        value.move< Expr* > (that.value);
+        break;
+
+      case symbol_kind::S_field: // field
+        value.move< Field* > (that.value);
+        break;
+
+      case symbol_kind::S_62_formals_aux: // formals-aux
+      case symbol_kind::S_formal: // formal
+        value.move< Formal* > (that.value);
+        break;
+
+      case symbol_kind::S_let: // let
+        value.move< Let* > (that.value);
+        break;
+
+      case symbol_kind::S_type: // type
+      case symbol_kind::S_60_type_id: // type-id
+        value.move< Type* > (that.value);
+        break;
+
+      case symbol_kind::S_71_un_op: // un-op
+        value.move< UnOp* > (that.value);
         break;
 
       case symbol_kind::S_NUMBER: // "integer-literal"
@@ -312,11 +434,9 @@ namespace VSOP {
         break;
 
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
-      case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
+      case symbol_kind::S_TYPEIDENTIFIER: // "type-identifier"
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_45_object_id: // object-id
-      case symbol_kind::S_init: // init
-      case symbol_kind::S_47_formal_aux: // formal-aux
+      case symbol_kind::S_59_object_id: // object-id
         value.move< std::string > (that.value);
         break;
 
@@ -579,8 +699,40 @@ namespace VSOP {
          when using variants.  */
       switch (yyr1_[yyn])
     {
-      case symbol_kind::S_44_type_id: // type-id
-        yylhs.value.emplace< Type > ();
+      case symbol_kind::S_70_bin_op: // bin-op
+        yylhs.value.emplace< BinOp* > ();
+        break;
+
+      case symbol_kind::S_block: // block
+      case symbol_kind::S_65_block_aux: // block-aux
+      case symbol_kind::S_expr: // expr
+      case symbol_kind::S_if: // if
+      case symbol_kind::S_while: // while
+      case symbol_kind::S_literal: // literal
+      case symbol_kind::S_74_boolean_literal: // boolean-literal
+        yylhs.value.emplace< Expr* > ();
+        break;
+
+      case symbol_kind::S_field: // field
+        yylhs.value.emplace< Field* > ();
+        break;
+
+      case symbol_kind::S_62_formals_aux: // formals-aux
+      case symbol_kind::S_formal: // formal
+        yylhs.value.emplace< Formal* > ();
+        break;
+
+      case symbol_kind::S_let: // let
+        yylhs.value.emplace< Let* > ();
+        break;
+
+      case symbol_kind::S_type: // type
+      case symbol_kind::S_60_type_id: // type-id
+        yylhs.value.emplace< Type* > ();
+        break;
+
+      case symbol_kind::S_71_un_op: // un-op
+        yylhs.value.emplace< UnOp* > ();
         break;
 
       case symbol_kind::S_NUMBER: // "integer-literal"
@@ -588,11 +740,9 @@ namespace VSOP {
         break;
 
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
-      case symbol_kind::S_TYPEIDENTIFIER: // TYPEIDENTIFIER
+      case symbol_kind::S_TYPEIDENTIFIER: // "type-identifier"
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_45_object_id: // object-id
-      case symbol_kind::S_init: // init
-      case symbol_kind::S_47_formal_aux: // formal-aux
+      case symbol_kind::S_59_object_id: // object-id
         yylhs.value.emplace< std::string > ();
         break;
 
@@ -616,14 +766,340 @@ namespace VSOP {
         {
           switch (yyn)
             {
-  case 2: // unit: %empty
-#line 127 "vsop.y"
-              {}
-#line 623 "parser.cpp"
+  case 2: // start: program
+#line 140 "vsop.y"
+            {}
+#line 773 "parser.cpp"
+    break;
+
+  case 4: // program-aux: %empty
+#line 144 "vsop.y"
+             {}
+#line 779 "parser.cpp"
+    break;
+
+  case 11: // field: object-id ":" type
+#line 156 "vsop.y"
+                 {Field *f = new Field(yystack_[2].value.as < std::string > (),yystack_[0].value.as < Type* > ()); yylhs.value.as < Field* > () = f;}
+#line 785 "parser.cpp"
+    break;
+
+  case 12: // field: object-id ":" type expr
+#line 158 "vsop.y"
+                 {Field *f = new Field(yystack_[3].value.as < std::string > (),yystack_[1].value.as < Type* > (),yystack_[0].value.as < Expr* > ()); yylhs.value.as < Field* > () = f;}
+#line 791 "parser.cpp"
+    break;
+
+  case 14: // type: type-id
+#line 164 "vsop.y"
+                 { yylhs.value.as < Type* > () = yystack_[0].value.as < Type* > (); }
+#line 797 "parser.cpp"
+    break;
+
+  case 15: // type: "int32"
+#line 166 "vsop.y"
+                { Type *t = new Type("int32"); yylhs.value.as < Type* > ()=t;}
+#line 803 "parser.cpp"
+    break;
+
+  case 16: // type: "bool"
+#line 168 "vsop.y"
+                { Type *t = new Type("bool"); yylhs.value.as < Type* > () = t;}
+#line 809 "parser.cpp"
+    break;
+
+  case 17: // type: "string"
+#line 170 "vsop.y"
+                { Type *t = new Type("string"); yylhs.value.as < Type* > () = t;}
+#line 815 "parser.cpp"
+    break;
+
+  case 18: // type: "unit"
+#line 172 "vsop.y"
+                { Type *t = new Type("unit"); yylhs.value.as < Type* > () = t;}
+#line 821 "parser.cpp"
+    break;
+
+  case 19: // object-id: "object-identifier"
+#line 175 "vsop.y"
+                {
+                   yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > ();
+                }
+#line 829 "parser.cpp"
+    break;
+
+  case 20: // object-id: "type-identifier"
+#line 179 "vsop.y"
+                                { 
+					cout << "syntax error, unexpected type-identifier ";
+				}
+#line 837 "parser.cpp"
+    break;
+
+  case 21: // type-id: "type-identifier"
+#line 184 "vsop.y"
+                {
+                    Type *t = new Type(yystack_[0].value.as < std::string > ()); yylhs.value.as < Type* > () = t;
+                }
+#line 845 "parser.cpp"
+    break;
+
+  case 22: // type-id: "object-identifier"
+#line 188 "vsop.y"
+                                { 
+                    cout << "syntax error, unexpected object-identifier ";
+				}
+#line 853 "parser.cpp"
+    break;
+
+  case 25: // formals-aux: formal ")"
+#line 195 "vsop.y"
+                { yylhs.value.as < Formal* > () = yystack_[1].value.as < Formal* > (); }
+#line 859 "parser.cpp"
+    break;
+
+  case 26: // formals-aux: formal "," formals-aux
+#line 196 "vsop.y"
+                                  { yylhs.value.as < Formal* > () = yystack_[2].value.as < Formal* > (); }
+#line 865 "parser.cpp"
+    break;
+
+  case 27: // formal: object-id ":" type
+#line 199 "vsop.y"
+                {Formal *f = new Formal(yystack_[2].value.as < std::string > (), yystack_[0].value.as < Type* > ()); yylhs.value.as < Formal* > () = f;}
+#line 871 "parser.cpp"
+    break;
+
+  case 28: // block: "{" expr block-aux
+#line 202 "vsop.y"
+                {std::list<Expr*> *l = new std::list<Expr*>(); Block *b = new Block(*l); yylhs.value.as < Expr* > ()=b;}
+#line 877 "parser.cpp"
+    break;
+
+  case 29: // block-aux: expr "}"
+#line 204 "vsop.y"
+                { yylhs.value.as < Expr* > () = yystack_[1].value.as < Expr* > (); }
+#line 883 "parser.cpp"
+    break;
+
+  case 30: // block-aux: expr block-aux
+#line 205 "vsop.y"
+                  { yylhs.value.as < Expr* > () = yystack_[1].value.as < Expr* > (); }
+#line 889 "parser.cpp"
+    break;
+
+  case 31: // expr: if
+#line 207 "vsop.y"
+        { yylhs.value.as < Expr* > () = yystack_[0].value.as < Expr* > (); }
+#line 895 "parser.cpp"
+    break;
+
+  case 32: // expr: while
+#line 208 "vsop.y"
+          { yylhs.value.as < Expr* > () = yystack_[0].value.as < Expr* > (); }
+#line 901 "parser.cpp"
+    break;
+
+  case 36: // expr: expr "." object-id "(" args
+#line 212 "vsop.y"
+          { yylhs.value.as < Expr* > () = yystack_[4].value.as < Expr* > (); }
+#line 907 "parser.cpp"
+    break;
+
+  case 37: // expr: "new" type-id
+#line 214 "vsop.y"
+        { New *n = new New(yystack_[0].value.as < Type* > ()); yylhs.value.as < Expr* > () = n;}
+#line 913 "parser.cpp"
+    break;
+
+  case 39: // expr: "self"
+#line 217 "vsop.y"
+        { Self *s = new Self(); yylhs.value.as < Expr* > () = s;}
+#line 919 "parser.cpp"
+    break;
+
+  case 40: // expr: literal
+#line 218 "vsop.y"
+          { yylhs.value.as < Expr* > () = yystack_[0].value.as < Expr* > (); }
+#line 925 "parser.cpp"
+    break;
+
+  case 41: // expr: "(" ")"
+#line 220 "vsop.y"
+        {Expr *e = new Expr(); yylhs.value.as < Expr* > () = e;}
+#line 931 "parser.cpp"
+    break;
+
+  case 42: // expr: "(" expr ")"
+#line 222 "vsop.y"
+        {yylhs.value.as < Expr* > () = yystack_[1].value.as < Expr* > ();}
+#line 937 "parser.cpp"
+    break;
+
+  case 43: // expr: block
+#line 223 "vsop.y"
+          { yylhs.value.as < Expr* > () = yystack_[0].value.as < Expr* > (); }
+#line 943 "parser.cpp"
+    break;
+
+  case 46: // if: expr "then" expr
+#line 228 "vsop.y"
+    { If *i = new If(yystack_[2].value.as < Expr* > (),yystack_[0].value.as < Expr* > ()); yylhs.value.as < Expr* > () = i;}
+#line 949 "parser.cpp"
+    break;
+
+  case 47: // if: expr "then" expr "else" expr
+#line 230 "vsop.y"
+    { If *i = new If(yystack_[4].value.as < Expr* > (),yystack_[2].value.as < Expr* > (),yystack_[0].value.as < Expr* > ()); yylhs.value.as < Expr* > () = i;}
+#line 955 "parser.cpp"
+    break;
+
+  case 48: // while: expr "do" expr
+#line 233 "vsop.y"
+    { While *w = new While(yystack_[2].value.as < Expr* > (),yystack_[0].value.as < Expr* > ()); yylhs.value.as < Expr* > () = w;}
+#line 961 "parser.cpp"
+    break;
+
+  case 49: // let: object-id ":" type "in" expr
+#line 237 "vsop.y"
+    { Let *l = new Let(yystack_[4].value.as < std::string > (), yystack_[2].value.as < Type* > (), yystack_[0].value.as < Expr* > ()); yylhs.value.as < Let* > () = l;}
+#line 967 "parser.cpp"
+    break;
+
+  case 50: // let: object-id ":" type "<-" expr "in" expr
+#line 239 "vsop.y"
+    { Let *l = new Let(yystack_[6].value.as < std::string > (), yystack_[4].value.as < Type* > (), yystack_[2].value.as < Expr* > (), yystack_[0].value.as < Expr* > ()); yylhs.value.as < Let* > () = l;}
+#line 973 "parser.cpp"
+    break;
+
+  case 51: // bin-op: expr "and" expr
+#line 242 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (), "and",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 979 "parser.cpp"
+    break;
+
+  case 52: // bin-op: expr "or" expr
+#line 244 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),"or",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 985 "parser.cpp"
+    break;
+
+  case 53: // bin-op: expr "=" expr
+#line 246 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),"=",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 991 "parser.cpp"
+    break;
+
+  case 54: // bin-op: expr "!=" expr
+#line 248 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),"!=",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 997 "parser.cpp"
+    break;
+
+  case 55: // bin-op: expr "<" expr
+#line 250 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),"<",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 1003 "parser.cpp"
+    break;
+
+  case 56: // bin-op: expr "<=" expr
+#line 252 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),"<=",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b ;}
+#line 1009 "parser.cpp"
+    break;
+
+  case 57: // bin-op: expr ">" expr
+#line 254 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),">",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 1015 "parser.cpp"
+    break;
+
+  case 58: // bin-op: expr ">=" expr
+#line 256 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),">=",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 1021 "parser.cpp"
+    break;
+
+  case 59: // bin-op: expr "+" expr
+#line 258 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),"+",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 1027 "parser.cpp"
+    break;
+
+  case 60: // bin-op: expr "-" expr
+#line 260 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),"-",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 1033 "parser.cpp"
+    break;
+
+  case 61: // bin-op: expr "*" expr
+#line 262 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),"*",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 1039 "parser.cpp"
+    break;
+
+  case 62: // bin-op: expr "/" expr
+#line 264 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),"/",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 1045 "parser.cpp"
+    break;
+
+  case 63: // bin-op: expr "^" expr
+#line 266 "vsop.y"
+                { BinOp *b = new BinOp(yystack_[2].value.as < Expr* > (),"^",yystack_[0].value.as < Expr* > ()); yylhs.value.as < BinOp* > () = b; }
+#line 1051 "parser.cpp"
+    break;
+
+  case 64: // un-op: "not" expr
+#line 269 "vsop.y"
+                {UnOp *u = new UnOp("not", yystack_[0].value.as < Expr* > ()); yylhs.value.as < UnOp* > () = u; }
+#line 1057 "parser.cpp"
+    break;
+
+  case 65: // un-op: "-" expr
+#line 271 "vsop.y"
+                {UnOp *u = new UnOp("-", yystack_[0].value.as < Expr* > ()); yylhs.value.as < UnOp* > () = u;}
+#line 1063 "parser.cpp"
+    break;
+
+  case 66: // un-op: "isnull" expr
+#line 273 "vsop.y"
+                {UnOp *u = new UnOp("isnull", yystack_[0].value.as < Expr* > ()); yylhs.value.as < UnOp* > () = u;}
+#line 1069 "parser.cpp"
+    break;
+
+  case 69: // literal: "integer-literal"
+#line 279 "vsop.y"
+                {yylhs.value.as < Expr* > () = new Number(yystack_[0].value.as < int > ());}
+#line 1075 "parser.cpp"
+    break;
+
+  case 70: // literal: "string-literal"
+#line 281 "vsop.y"
+                {yylhs.value.as < Expr* > () = new String(yystack_[0].value.as < std::string > ());}
+#line 1081 "parser.cpp"
+    break;
+
+  case 71: // literal: boolean-literal
+#line 282 "vsop.y"
+                  { yylhs.value.as < Expr* > () = yystack_[0].value.as < Expr* > (); }
+#line 1087 "parser.cpp"
+    break;
+
+  case 72: // boolean-literal: "true"
+#line 284 "vsop.y"
+                        {yylhs.value.as < Expr* > () = new Bool("true");}
+#line 1093 "parser.cpp"
+    break;
+
+  case 73: // boolean-literal: "false"
+#line 286 "vsop.y"
+                        {yylhs.value.as < Expr* > () = new Bool("false");}
+#line 1099 "parser.cpp"
     break;
 
 
-#line 627 "parser.cpp"
+#line 1103 "parser.cpp"
 
             default:
               break;
@@ -812,62 +1288,193 @@ namespace VSOP {
 
 
 
-  const signed char Parser::yypact_ninf_ = -1;
+  const signed char Parser::yypact_ninf_ = -107;
 
   const signed char Parser::yytable_ninf_ = -1;
 
-  const signed char
+  const short
   Parser::yypact_[] =
   {
-      -1,     0,    -1
+      -4,   -10,    23,  -107,  -107,    -4,  -107,  -107,    19,  -107,
+    -107,   -10,    26,  -107,    -7,  -107,  -107,  -107,  -107,    52,
+      -7,    10,    -7,  -107,    15,   169,    55,  -107,  -107,    57,
+    -107,     7,  -107,  -107,  -107,  -107,   329,  -107,   169,   169,
+    -107,    32,   329,   302,   329,  -107,   329,   -10,   329,  -107,
+    -107,  -107,  -107,    60,  -107,   280,  -107,  -107,  -107,    62,
+      63,  -107,  -107,    67,  -107,  -107,   280,  -107,   212,   133,
+     280,  -107,   280,   329,   329,   169,   329,   329,   329,   329,
+     329,    32,   329,   329,   329,   329,   329,   329,   329,   329,
+     329,   329,  -107,  -107,  -107,  -107,   329,  -107,    88,   280,
+     178,  -107,    11,   280,   280,   280,   280,   280,    70,   280,
+     280,   280,   280,   280,    34,   280,   280,   280,   280,   280,
+    -107,  -107,  -107,   329,   329,   329,   329,   329,  -107,   246,
+     280,  -107,   -19,   329,   280
   };
 
   const signed char
   Parser::yydefact_[] =
   {
-       2,     0,     1
+       4,     0,     0,     2,     3,     4,    22,    21,     0,     1,
+       5,     0,     0,     7,     0,     8,    19,    20,     6,     0,
+       0,     0,     0,    10,     0,     0,     0,     9,    23,     0,
+      24,     0,    16,    15,    17,    18,    11,    14,     0,     0,
+      25,     0,     0,     0,     0,    73,     0,     0,     0,    39,
+      72,    69,    70,    38,    43,    12,    31,    32,    33,     0,
+       0,    40,    71,     0,    27,    26,    65,    41,     0,     0,
+      66,    37,    64,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,    44,    45,    13,    42,     0,    28,     0,    34,
+       0,    35,     0,    60,    59,    61,    62,    63,     0,    53,
+      55,    56,    51,    48,    46,    52,    54,    57,    58,    60,
+      29,    30,    67,     0,     0,     0,     0,     0,    68,     0,
+      49,    36,    47,     0,    50
   };
 
   const signed char
   Parser::yypgoto_[] =
   {
-      -1,    -1
+    -107,  -107,  -107,    78,  -107,  -107,    44,  -107,  -107,   -37,
+     -11,    14,  -107,    43,  -107,    22,   -12,   -36,  -107,  -107,
+    -107,  -107,  -107,  -106,  -107,  -107
   };
 
   const signed char
   Parser::yydefgoto_[] =
   {
-       0,     1
+       0,     2,     3,     4,     5,    12,    18,    19,    20,    36,
+      53,    37,    26,    30,    31,    54,    97,   100,    56,    57,
+      58,    59,    60,   101,    61,    62
   };
 
-  const signed char
+  const unsigned char
   Parser::yytable_[] =
   {
-       2
+      55,    63,    64,    21,    15,    86,    66,    68,    69,    21,
+      70,    21,    72,    29,   124,     8,    40,   128,    24,     1,
+     131,    41,    25,     9,    28,    13,    88,    89,    90,    91,
+      29,     6,     7,    98,    16,    17,    14,    99,   102,   125,
+     103,   104,   105,   106,   107,    11,   109,   110,   111,   112,
+     113,   114,   115,   116,   117,   118,    16,    17,    86,   127,
+     119,    71,    98,    73,    23,    22,    27,    38,    74,    39,
+     108,    87,    75,    16,    17,    92,    93,    44,   126,    88,
+      89,    90,    91,    10,    65,    94,   121,     0,   129,   130,
+       0,   132,    96,    77,    78,    79,    43,   134,    44,   120,
+       0,     0,     0,    80,    81,    82,    83,    84,     0,    85,
+       0,     0,    86,     0,     0,    45,     0,     0,    46,     0,
+      47,    48,    49,     0,    50,    87,     0,     0,     0,    16,
+      17,    51,    52,    88,    89,    90,    91,    96,    77,    78,
+      79,    43,     0,    44,     0,     0,     0,     0,    80,    81,
+      82,    83,    84,     0,    85,     0,     0,    86,     0,     0,
+      45,     0,     0,    46,     0,    47,    48,    49,     0,    50,
+      87,     0,     0,     0,    16,    17,    51,    52,    88,    89,
+      90,    91,    76,    77,    78,    79,     0,   122,     0,     0,
+       0,    32,   123,    80,    81,    82,    83,    84,    33,    85,
+       0,     0,    86,     0,    34,     0,     0,    35,     0,     0,
+       6,     7,     0,     0,     0,    87,    76,    77,    78,    79,
+       0,    95,     0,    88,    89,    90,    91,    80,    81,    82,
+      83,    84,     0,    85,     0,     0,    86,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,    87,
+      76,    77,    78,    79,     0,     0,     0,    88,    89,    90,
+      91,    80,    81,    82,    83,    84,     0,    85,     0,     0,
+      86,     0,     0,     0,   133,     0,     0,     0,     0,     0,
+       0,     0,     0,    87,    76,    77,    78,    79,     0,     0,
+       0,    88,    89,    90,    91,    80,    81,    82,    83,    84,
+       0,    85,     0,     0,    86,     0,    42,     0,     0,     0,
+      43,    67,    44,     0,     0,     0,     0,    87,     0,     0,
+       0,     0,     0,     0,     0,    88,    89,    90,    91,    45,
+       0,     0,    46,    42,    47,    48,    49,    43,    50,    44,
+       0,     0,     0,    16,    17,    51,    52,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,    45,     0,     0,    46,
+       0,    47,    48,    49,     0,    50,     0,     0,     0,     0,
+      16,    17,    51,    52
   };
 
-  const signed char
+  const short
   Parser::yycheck_[] =
   {
-       0
+      36,    38,    39,    14,    11,    24,    42,    43,    44,    20,
+      46,    22,    48,    24,     3,     1,     9,   123,     8,    23,
+     126,    14,    12,     0,     9,    11,    45,    46,    47,    48,
+      41,    41,    42,    69,    41,    42,    10,    73,    75,    28,
+      76,    77,    78,    79,    80,    26,    82,    83,    84,    85,
+      86,    87,    88,    89,    90,    91,    41,    42,    24,    25,
+      96,    47,    98,     3,    20,    13,    22,    12,     8,    12,
+      81,    37,    12,    41,    42,    13,    13,    10,     8,    45,
+      46,    47,    48,     5,    41,    63,    98,    -1,   124,   125,
+      -1,   127,     4,     5,     6,     7,     8,   133,    10,    11,
+      -1,    -1,    -1,    15,    16,    17,    18,    19,    -1,    21,
+      -1,    -1,    24,    -1,    -1,    27,    -1,    -1,    30,    -1,
+      32,    33,    34,    -1,    36,    37,    -1,    -1,    -1,    41,
+      42,    43,    44,    45,    46,    47,    48,     4,     5,     6,
+       7,     8,    -1,    10,    -1,    -1,    -1,    -1,    15,    16,
+      17,    18,    19,    -1,    21,    -1,    -1,    24,    -1,    -1,
+      27,    -1,    -1,    30,    -1,    32,    33,    34,    -1,    36,
+      37,    -1,    -1,    -1,    41,    42,    43,    44,    45,    46,
+      47,    48,     4,     5,     6,     7,    -1,     9,    -1,    -1,
+      -1,    22,    14,    15,    16,    17,    18,    19,    29,    21,
+      -1,    -1,    24,    -1,    35,    -1,    -1,    38,    -1,    -1,
+      41,    42,    -1,    -1,    -1,    37,     4,     5,     6,     7,
+      -1,     9,    -1,    45,    46,    47,    48,    15,    16,    17,
+      18,    19,    -1,    21,    -1,    -1,    24,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    37,
+       4,     5,     6,     7,    -1,    -1,    -1,    45,    46,    47,
+      48,    15,    16,    17,    18,    19,    -1,    21,    -1,    -1,
+      24,    -1,    -1,    -1,    28,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    37,     4,     5,     6,     7,    -1,    -1,
+      -1,    45,    46,    47,    48,    15,    16,    17,    18,    19,
+      -1,    21,    -1,    -1,    24,    -1,     4,    -1,    -1,    -1,
+       8,     9,    10,    -1,    -1,    -1,    -1,    37,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    45,    46,    47,    48,    27,
+      -1,    -1,    30,     4,    32,    33,    34,     8,    36,    10,
+      -1,    -1,    -1,    41,    42,    43,    44,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    27,    -1,    -1,    30,
+      -1,    32,    33,    34,    -1,    36,    -1,    -1,    -1,    -1,
+      41,    42,    43,    44
   };
 
   const signed char
   Parser::yystos_[] =
   {
-       0,    54,     0
+       0,    23,    50,    51,    52,    53,    41,    42,    60,     0,
+      52,    26,    54,    60,    10,    11,    41,    42,    55,    56,
+      57,    59,    13,    55,     8,    12,    61,    55,     9,    59,
+      62,    63,    22,    29,    35,    38,    58,    60,    12,    12,
+       9,    14,     4,     8,    10,    27,    30,    32,    33,    34,
+      36,    43,    44,    59,    64,    66,    67,    68,    69,    70,
+      71,    73,    74,    58,    58,    62,    66,     9,    66,    66,
+      66,    60,    66,     3,     8,    12,     4,     5,     6,     7,
+      15,    16,    17,    18,    19,    21,    24,    37,    45,    46,
+      47,    48,    13,    13,    64,     9,     4,    65,    66,    66,
+      66,    72,    58,    66,    66,    66,    66,    66,    59,    66,
+      66,    66,    66,    66,    66,    66,    66,    66,    66,    66,
+      11,    65,     9,    14,     3,    28,     8,    25,    72,    66,
+      66,    72,    66,    28,    66
   };
 
   const signed char
   Parser::yyr1_[] =
   {
-       0,    53,    54
+       0,    49,    50,    51,    52,    52,    53,    54,    55,    55,
+      55,    56,    56,    57,    58,    58,    58,    58,    58,    59,
+      59,    60,    60,    61,    61,    62,    62,    63,    64,    65,
+      65,    66,    66,    66,    66,    66,    66,    66,    66,    66,
+      66,    66,    66,    66,    66,    66,    67,    67,    68,    69,
+      69,    70,    70,    70,    70,    70,    70,    70,    70,    70,
+      70,    70,    70,    70,    71,    71,    71,    72,    72,    73,
+      73,    73,    74,    74
   };
 
   const signed char
   Parser::yyr2_[] =
   {
-       0,     2,     0
+       0,     2,     1,     1,     0,     2,     5,     2,     1,     3,
+       2,     3,     4,     5,     1,     1,     1,     1,     1,     1,
+       1,     1,     1,     2,     2,     2,     3,     3,     3,     2,
+       2,     1,     1,     1,     3,     3,     5,     2,     1,     1,
+       1,     2,     3,     1,     2,     2,     3,     5,     3,     5,
+       7,     3,     3,     3,     3,     3,     3,     3,     3,     3,
+       3,     3,     3,     3,     2,     2,     2,     2,     3,     1,
+       1,     1,     1,     1
   };
 
 
@@ -880,22 +1487,32 @@ namespace VSOP {
   "\"end of file\"", "error", "\"invalid token\"", "\"<-\"", "\"-\"",
   "\"+\"", "\"*\"", "\"/\"", "\"(\"", "\")\"", "\"{\"", "\"}\"", "\":\"",
   "\";\"", "\",\"", "\"^\"", "\".\"", "\"=\"", "\"<\"", "\"<=\"", "\"if\"",
-  "\"and\"", "\"type-identifier\"", "\"class\"", "\"do\"", "\"else\"",
-  "\"extends\"", "\"false\"", "\"in\"", "\"int32\"", "\"isnull\"",
-  "\"let\"", "\"new\"", "\"not\"", "\"self\"", "\"string\"", "\"true\"",
-  "\"then\"", "\"unit\"", "\"while\"", "\"object-identifier\"",
-  "TYPEIDENTIFIER", "\"integer-literal\"", "\"string-literal\"", "type-id",
-  "object-id", "init", "formal-aux", "\"bool\"", "\"or\"", "\"!=\"",
-  "\">\"", "\">=\"", "$accept", "unit", YY_NULLPTR
+  "\"and\"", "\"bool\"", "\"class\"", "\"do\"", "\"else\"", "\"extends\"",
+  "\"false\"", "\"in\"", "\"int32\"", "\"isnull\"", "\"let\"", "\"new\"",
+  "\"not\"", "\"self\"", "\"string\"", "\"true\"", "\"then\"", "\"unit\"",
+  "\"while\"", "\"start\"", "\"object-identifier\"", "\"type-identifier\"",
+  "\"integer-literal\"", "\"string-literal\"", "\"or\"", "\"!=\"", "\">\"",
+  "\">=\"", "$accept", "start", "program", "program-aux", "class",
+  "extends", "class-body", "field", "method", "type", "object-id",
+  "type-id", "formals", "formals-aux", "formal", "block", "block-aux",
+  "expr", "if", "while", "let", "bin-op", "un-op", "args", "literal",
+  "boolean-literal", YY_NULLPTR
   };
 #endif
 
 
 #if YYDEBUG
-  const signed char
+  const short
   Parser::yyrline_[] =
   {
-       0,   127,   127
+       0,   140,   140,   142,   144,   145,   147,   149,   151,   152,
+     153,   155,   157,   162,   164,   165,   167,   169,   171,   174,
+     178,   183,   187,   192,   193,   195,   196,   198,   201,   204,
+     205,   207,   208,   209,   210,   211,   212,   213,   215,   216,
+     218,   219,   221,   223,   224,   225,   227,   229,   232,   236,
+     238,   241,   243,   245,   247,   249,   251,   253,   255,   257,
+     259,   261,   263,   265,   268,   270,   272,   275,   276,   278,
+     280,   282,   283,   285
   };
 
   void
@@ -928,9 +1545,9 @@ namespace VSOP {
 
 #line 19 "vsop.y"
 } // VSOP
-#line 932 "parser.cpp"
+#line 1549 "parser.cpp"
 
-#line 222 "vsop.y"
+#line 288 "vsop.y"
 
 // User code
 void VSOP::Parser::error(const location_type& l, const std::string& m)

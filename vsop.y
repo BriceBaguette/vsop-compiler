@@ -75,7 +75,7 @@
     LOWEREQUAL "<="
     IF          "if"
     AND         "and"
-    BOOL        "type-identifier"
+    BOOL        "bool"
     CLASS       "class"
     DO          "do"
     ELSE        "else"
@@ -93,6 +93,7 @@
     THEN        "then"
     UNIT        "unit"
     WHILE       "while"
+    START       "start"
 
 ;
 
@@ -101,16 +102,22 @@
 %token <std::string> TYPEIDENTIFIER "type-identifier"
 %token <int> NUMBER "integer-literal"
 %token <std::string> STRING "string-literal"
-%type <Expr> type-id 
-%type <Expr> object-id   
-%type <Expr> init
-%type <std::string> formals-aux
-%type <Expr> bin-op
-%type <Expr> un-op
-%type <Expr> expr
-%type <Expr> if
-%type <Expr> while
-%nterm <int> exp
+%type <Type*> type-id 
+%type <std::string> object-id   
+%type <BinOp*> bin-op
+%type <UnOp*> un-op
+%type <Expr*> expr
+%type <Expr*> block
+%type <Expr*> block-aux
+%type <Expr*> if
+%type <Expr*> while
+%type <Let*> let
+%type <Field*> field
+%type <Formal*> formals-aux
+%type <Formal*> formal
+%type <Type*> type
+%type <Expr*> boolean-literal
+%type <Expr*> literal
 
 // Precedence
 %right ASSIGN;
@@ -122,17 +129,20 @@
 %right ISNULL;
 %right POW;
 %left DOT;
+
+%precedence "if" "then" "while";
+%precedence "else";
 %%
 // Grammar rules
 
-%start init;
-init: 
-    %empty    {}
+%start start;
+start: 
+    program {}
 
-unit: 
-    %empty    {}
+program: program-aux;
 
-program: class { class };
+program-aux: {}
+             | class program-aux;
 
 class:          "class" type-id extends "{" class-body;
 
@@ -142,19 +152,38 @@ class-body:     "}"
                     | field ";" class-body
                     | method class-body;
 
-field:           object-id ":" type init;
+field:          object-id ":" type
+                 {Field *f = new Field($1,$3); $$ = f;}
+                | object-id ":" type expr
+                 {Field *f = new Field($1,$3,$4); $$ = f;};
+
+
 
 method:          object-id formals ":" type block;
 
-type:            type-id | "int32" | "bool" | "string" | "unit";
+type:            type-id 
+                | "int32" 
+                { Type *t = new Type("int32"); $$=t;}
+                | "bool" 
+                { Type *t = new Type("bool"); $$ = t;}
+                | "string" 
+                { Type *t = new Type("string"); $$ = t;}
+                | "unit"
+                { Type *t = new Type("unit"); $$ = t;};
 
 object-id:		OBJECTIDENTIFIER
+                {
+                   $$ = $1;
+                }
 				| TYPEIDENTIFIER
 				{ 
 					cout << "syntax error, unexpected type-identifier ";
 				};
 
 type-id:		TYPEIDENTIFIER
+                {
+                    Type *t = new Type($1); $$ = t;
+                }
 				| OBJECTIDENTIFIER
 				{ 
                     cout << "syntax error, unexpected object-identifier ";
@@ -167,9 +196,10 @@ formals-aux:    formal ")"
 				| formal "," formals-aux;
 
 formal:         object-id ":" type
-                { $$ = new Formal($1, $3)};
+                {Formal *f = new Formal($1, $3); $$ = f;};
 
-block:          "{" expr block-aux;
+block:          "{" expr block-aux
+                {std::list<Expr*> *l = new std::list<Expr*>(); Block *b = new Block(*l); $$=b;};
 
 block-aux:      expr "}"
                 | expr block-aux;
@@ -181,75 +211,79 @@ expr:   if
         | object-id "(" args
         | expr "." object-id "(" args 
         | "new" type-id
+        { New *n = new New($2); $$ = n;}
         | object-id
         | "self"
+        { Self *s = new Self(); $$ = s;}
         | literal
         | "(" ")"
+        {Expr *e = new Expr(); $$ = e;}
         | "(" expr ")"
+        {$$ = $2;}
         | block
         | bin-op ";"
         | un-op ";";
 
 if: expr "then" expr
-    { $$ = new If($1,$3)}
+    { If *i = new If($1,$3); $$ = i;}
     | expr "then" expr "else" expr
-    { $$ = new If($1,$3,$5)};
+    { If *i = new If($1,$3,$5); $$ = i;};
 
 while: expr "do" expr
-    { $$ = new While($1,$3)};
+    { While *w = new While($1,$3); $$ = w;};
 
 
 let: object-id ":" type "in" expr
-    { $$ = new Let($1, $3, $5)}
+    { Let *l = new Let($1, $3, $5); $$ = l;}
     | object-id ":" type "<-" expr "in" expr
-    { $$ = new Let($1, $3, $5, $7)};
+    { Let *l = new Let($1, $3, $5, $7); $$ = l;};
 
 bin-op:			expr "and" expr
-                { $$ = new BinOp($1, "and",$3) }
+                { BinOp *b = new BinOp($1, "and",$3); $$ = b; }
 				| expr "or" expr
-                { $$ = new BinOp($1,"or",$3) }
+                { BinOp *b = new BinOp($1,"or",$3); $$ = b; }
 				| expr "=" expr
-                { $$ = new BinOp($1,"=",$3) }
+                { BinOp *b = new BinOp($1,"=",$3); $$ = b; }
 				| expr "!=" expr
-                { $$ = new BinOp($1,"!=",$3) }
+                { BinOp *b = new BinOp($1,"!=",$3); $$ = b; }
 				| expr "<" expr
-                { $$ = new BinOp($1,"<",$3) }
+                { BinOp *b = new BinOp($1,"<",$3); $$ = b; }
 				| expr "<=" expr
-                { $$ = new BinOp($1,"<=",$3) }
+                { BinOp *b = new BinOp($1,"<=",$3); $$ = b ;}
 				| expr ">" expr
-                { $$ = new BinOp($1,">",$3) }
+                { BinOp *b = new BinOp($1,">",$3); $$ = b; }
 				| expr ">=" expr
-                { $$ = new BinOp($1,">=",$3) }
+                { BinOp *b = new BinOp($1,">=",$3); $$ = b; }
 				| expr "+" expr
-                { $$ = new BinOp($1,"+",$3) }
+                { BinOp *b = new BinOp($1,"+",$3); $$ = b; }
 				| expr "-" expr
-                { $$ = new BinOp($1,"-",$3) }
+                { BinOp *b = new BinOp($1,"-",$3); $$ = b; }
 				| expr "*" expr
-                { $$ = new BinOp($1,"*",$3) }
+                { BinOp *b = new BinOp($1,"*",$3); $$ = b; }
 				| expr "/" expr
-                { $$ = new BinOp($1,"/",$3) }
+                { BinOp *b = new BinOp($1,"/",$3); $$ = b; }
 				| expr "^" expr
-                { $$ = new BinOp($1,"^",$3) };
+                { BinOp *b = new BinOp($1,"^",$3); $$ = b; };
 
 un-op:          "not" expr
-                {$$ = new UnOp("not", $1)}
+                {UnOp *u = new UnOp("not", $2); $$ = u; }
                 | "-" expr
-                {$$ = new UnOp("-", $1)}
+                {UnOp *u = new UnOp("-", $2); $$ = u;}
                 | "isnull" expr
-                {$$ = new UnOp("isnull", $1)};
+                {UnOp *u = new UnOp("isnull", $2); $$ = u;};
 
 args:       expr ")" 
             | expr "," args;
 
 literal:         NUMBER 
-                {$$ = new Number($1)}
+                {$$ = new Number($1);}
                 | STRING
-                {$$ = new String($1)}
+                {$$ = new String($1);}
                 | boolean-literal;
 boolean-literal:        "true" 
-                        {$$ = new Bool($1)}
+                        {$$ = new Bool("true");}
                         | "false"
-                        {$$ = new Bool($1)};
+                        {$$ = new Bool("false");};
 
 %%
 // User code
