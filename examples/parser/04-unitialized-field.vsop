@@ -1,0 +1,4 @@
+class Test
+{
+    x : int32;
+}

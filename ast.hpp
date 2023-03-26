@@ -118,10 +118,11 @@ class Method : public Node
 public:
     string name;
     list<Formal *> formals;
+    Type* returnType;
     Block *block;
-    string returnType;
+    
 
-    Method(string n, list<Formal *> f, Block *b, string ret) : name(n), formals(f), block(b), returnType(ret) {}
+    Method(string n, list<Formal *> f, Type* ret, Block *b) : name(n), formals(f),  returnType(ret), block(b) {}
 
     void print()
     {
@@ -140,7 +141,9 @@ public:
                 (*i)->print();
             }
         }
-        cout << "], " << returnType << ", ";
+        cout << "], ";
+        returnType->print();
+        cout << ", ";
         block->print();
         cout << ")" << endl;
     }
@@ -349,7 +352,7 @@ public:
     }
 };
 
-class Assign : public Node
+class Assign : public Expr
 {
 public:
     string name;

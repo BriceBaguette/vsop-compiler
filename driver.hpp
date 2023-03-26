@@ -87,9 +87,9 @@ namespace VSOP
         void print_tokens();
 
         /**
-         * @brief The result of the computation.
+         * @brief The resulting ast tree.
          */
-        int result;
+        Program *result;
 
     private:
         /**

@@ -52,6 +52,12 @@
 %code {
     #include "driver.hpp"
     using namespace std;
+    list<Field*> fieldtmp;
+    list<Method*> methodtmp;
+    list<Class*> classtmp;
+    list<Formal*> formtmp;
+    list<Expr*> exptmp;
+    list<Expr*> argtmp;
 }
 
 // Token and symbols definitions
@@ -107,8 +113,7 @@
 %type <BinOp*> bin-op
 %type <UnOp*> un-op
 %type <Expr*> expr
-%type <Expr*> block
-%type <Expr*> block-aux
+%type <Block*> block
 %type <Expr*> if
 %type <Expr*> while
 %type <Let*> let
@@ -118,6 +123,9 @@
 %type <Type*> type
 %type <Expr*> boolean-literal
 %type <Expr*> literal
+%type <Class*> class
+%type <Method*> method
+%type <Program*> program
 
 // Precedence
 %right ASSIGN;
@@ -137,20 +145,27 @@
 
 %start start;
 start: 
-    program {}
+    program {
+        driver.result = $1;
+        };
 
-program: program-aux;
+program: program-aux
+        {list<Class*> c = classtmp; classtmp.empty(); Program *p = new Program(c); $$ = p;};
 
 program-aux: {}
-             | class program-aux;
+             | class program-aux
+             {classtmp.push_back($1);};
 
-class:          "class" type-id extends "{" class-body;
-
-extends:     "extends" type-id
+class:      "class" TYPEIDENTIFIER "{" class-body
+            {list<Field*> f = fieldtmp; fieldtmp.empty(); list<Method*> m = methodtmp; methodtmp.empty(); Class *c = new Class($2, f, m); $$ = c;}
+            | "class" TYPEIDENTIFIER "extends" TYPEIDENTIFIER "{" class-body
+            {list<Field*> f = fieldtmp; fieldtmp.empty(); list<Method*> m = methodtmp; methodtmp.empty(); Class *c = new Class($2, $4, f, m); $$ = c;};
 
 class-body:     "}" 
                     | field ";" class-body
-                    | method class-body;
+                    {fieldtmp.push_back($1);}
+                    | method class-body
+                    {methodtmp.push_back($1);};
 
 field:          object-id ":" type
                  {Field *f = new Field($1,$3); $$ = f;}
@@ -159,7 +174,8 @@ field:          object-id ":" type
 
 
 
-method:          object-id formals ":" type block;
+method:          object-id formals ":" type block
+                 {list<Formal*> f = formtmp; formtmp.empty();Method *m = new Method($1, f, $4, $5); $$ = m;};
 
 type:            type-id 
                 | "int32" 
@@ -189,27 +205,34 @@ type-id:		TYPEIDENTIFIER
                     cout << "syntax error, unexpected object-identifier ";
 				};
 
-formals:     "(" ")"    
+formals:     "(" ")"
             | "(" formals-aux;
 
 formals-aux:    formal ")"
-				| formal "," formals-aux;
+                {formtmp.push_back($1);}
+				| formal "," formals-aux
+                {formtmp.push_back($1);};
 
 formal:         object-id ":" type
                 {Formal *f = new Formal($1, $3); $$ = f;};
 
 block:          "{" expr block-aux
-                {std::list<Expr*> *l = new std::list<Expr*>(); Block *b = new Block(*l); $$=b;};
+                {list<Expr*> e = exptmp; exptmp.empty(); Block *b = new Block(e); $$=b;};
 
 block-aux:      expr "}"
-                | expr block-aux;
+                {exptmp.push_back($1);}
+                | expr block-aux
+                {exptmp.push_back($1);};
 
 expr:   if
         | while
         | let
         | object-id "<-" expr
+        { Assign *a = new Assign($1, $3); $$ = a;}
         | object-id "(" args
+        {list<Expr*> a = argtmp; argtmp.empty(); Call *c = new Call($1, a); $$ = c;}
         | expr "." object-id "(" args 
+        {list<Expr*> a = argtmp; argtmp.empty(); Call *c = new Call($3, $1, a); $$ = c;}
         | "new" type-id
         { New *n = new New($2); $$ = n;}
         | object-id
@@ -273,7 +296,9 @@ un-op:          "not" expr
                 {UnOp *u = new UnOp("isnull", $2); $$ = u;};
 
 args:       expr ")" 
-            | expr "," args;
+                {argtmp.push_back($1);}
+            | expr "," args
+                {argtmp.push_back($1);};
 
 literal:         NUMBER 
                 {$$ = new Number($1);}

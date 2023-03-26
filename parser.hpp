@@ -407,39 +407,49 @@ namespace VSOP {
       char dummy1[sizeof (BinOp*)];
 
       // block
-      // block-aux
+      char dummy2[sizeof (Block*)];
+
+      // class
+      char dummy3[sizeof (Class*)];
+
       // expr
       // if
       // while
       // literal
       // boolean-literal
-      char dummy2[sizeof (Expr*)];
+      char dummy4[sizeof (Expr*)];
 
       // field
-      char dummy3[sizeof (Field*)];
+      char dummy5[sizeof (Field*)];
 
       // formals-aux
       // formal
-      char dummy4[sizeof (Formal*)];
+      char dummy6[sizeof (Formal*)];
 
       // let
-      char dummy5[sizeof (Let*)];
+      char dummy7[sizeof (Let*)];
+
+      // method
+      char dummy8[sizeof (Method*)];
+
+      // program
+      char dummy9[sizeof (Program*)];
 
       // type
       // type-id
-      char dummy6[sizeof (Type*)];
+      char dummy10[sizeof (Type*)];
 
       // un-op
-      char dummy7[sizeof (UnOp*)];
+      char dummy11[sizeof (UnOp*)];
 
       // "integer-literal"
-      char dummy8[sizeof (int)];
+      char dummy12[sizeof (int)];
 
       // "object-identifier"
       // "type-identifier"
       // "string-literal"
       // object-id
-      char dummy9[sizeof (std::string)];
+      char dummy13[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -605,27 +615,26 @@ namespace VSOP {
         S_program = 51,                          // program
         S_52_program_aux = 52,                   // program-aux
         S_class = 53,                            // class
-        S_extends = 54,                          // extends
-        S_55_class_body = 55,                    // class-body
-        S_field = 56,                            // field
-        S_method = 57,                           // method
-        S_type = 58,                             // type
-        S_59_object_id = 59,                     // object-id
-        S_60_type_id = 60,                       // type-id
-        S_formals = 61,                          // formals
-        S_62_formals_aux = 62,                   // formals-aux
-        S_formal = 63,                           // formal
-        S_block = 64,                            // block
-        S_65_block_aux = 65,                     // block-aux
-        S_expr = 66,                             // expr
-        S_if = 67,                               // if
-        S_while = 68,                            // while
-        S_let = 69,                              // let
-        S_70_bin_op = 70,                        // bin-op
-        S_71_un_op = 71,                         // un-op
-        S_args = 72,                             // args
-        S_literal = 73,                          // literal
-        S_74_boolean_literal = 74                // boolean-literal
+        S_54_class_body = 54,                    // class-body
+        S_field = 55,                            // field
+        S_method = 56,                           // method
+        S_type = 57,                             // type
+        S_58_object_id = 58,                     // object-id
+        S_59_type_id = 59,                       // type-id
+        S_formals = 60,                          // formals
+        S_61_formals_aux = 61,                   // formals-aux
+        S_formal = 62,                           // formal
+        S_block = 63,                            // block
+        S_64_block_aux = 64,                     // block-aux
+        S_expr = 65,                             // expr
+        S_if = 66,                               // if
+        S_while = 67,                            // while
+        S_let = 68,                              // let
+        S_69_bin_op = 69,                        // bin-op
+        S_70_un_op = 70,                         // un-op
+        S_args = 71,                             // args
+        S_literal = 72,                          // literal
+        S_73_boolean_literal = 73                // boolean-literal
       };
     };
 
@@ -662,17 +671,23 @@ namespace VSOP {
       {
         switch (this->kind ())
     {
-      case symbol_kind::S_70_bin_op: // bin-op
+      case symbol_kind::S_69_bin_op: // bin-op
         value.move< BinOp* > (std::move (that.value));
         break;
 
       case symbol_kind::S_block: // block
-      case symbol_kind::S_65_block_aux: // block-aux
+        value.move< Block* > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_class: // class
+        value.move< Class* > (std::move (that.value));
+        break;
+
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_if: // if
       case symbol_kind::S_while: // while
       case symbol_kind::S_literal: // literal
-      case symbol_kind::S_74_boolean_literal: // boolean-literal
+      case symbol_kind::S_73_boolean_literal: // boolean-literal
         value.move< Expr* > (std::move (that.value));
         break;
 
@@ -680,7 +695,7 @@ namespace VSOP {
         value.move< Field* > (std::move (that.value));
         break;
 
-      case symbol_kind::S_62_formals_aux: // formals-aux
+      case symbol_kind::S_61_formals_aux: // formals-aux
       case symbol_kind::S_formal: // formal
         value.move< Formal* > (std::move (that.value));
         break;
@@ -689,12 +704,20 @@ namespace VSOP {
         value.move< Let* > (std::move (that.value));
         break;
 
+      case symbol_kind::S_method: // method
+        value.move< Method* > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_program: // program
+        value.move< Program* > (std::move (that.value));
+        break;
+
       case symbol_kind::S_type: // type
-      case symbol_kind::S_60_type_id: // type-id
+      case symbol_kind::S_59_type_id: // type-id
         value.move< Type* > (std::move (that.value));
         break;
 
-      case symbol_kind::S_71_un_op: // un-op
+      case symbol_kind::S_70_un_op: // un-op
         value.move< UnOp* > (std::move (that.value));
         break;
 
@@ -705,7 +728,7 @@ namespace VSOP {
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // "type-identifier"
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_59_object_id: // object-id
+      case symbol_kind::S_58_object_id: // object-id
         value.move< std::string > (std::move (that.value));
         break;
 
@@ -740,6 +763,34 @@ namespace VSOP {
       {}
 #else
       basic_symbol (typename Base::kind_type t, const BinOp*& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, Block*&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const Block*& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, Class*&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const Class*& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -796,6 +847,34 @@ namespace VSOP {
       {}
 #else
       basic_symbol (typename Base::kind_type t, const Let*& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, Method*&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const Method*& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, Program*&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const Program*& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -880,17 +959,23 @@ namespace VSOP {
         // Value type destructor.
 switch (yykind)
     {
-      case symbol_kind::S_70_bin_op: // bin-op
+      case symbol_kind::S_69_bin_op: // bin-op
         value.template destroy< BinOp* > ();
         break;
 
       case symbol_kind::S_block: // block
-      case symbol_kind::S_65_block_aux: // block-aux
+        value.template destroy< Block* > ();
+        break;
+
+      case symbol_kind::S_class: // class
+        value.template destroy< Class* > ();
+        break;
+
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_if: // if
       case symbol_kind::S_while: // while
       case symbol_kind::S_literal: // literal
-      case symbol_kind::S_74_boolean_literal: // boolean-literal
+      case symbol_kind::S_73_boolean_literal: // boolean-literal
         value.template destroy< Expr* > ();
         break;
 
@@ -898,7 +983,7 @@ switch (yykind)
         value.template destroy< Field* > ();
         break;
 
-      case symbol_kind::S_62_formals_aux: // formals-aux
+      case symbol_kind::S_61_formals_aux: // formals-aux
       case symbol_kind::S_formal: // formal
         value.template destroy< Formal* > ();
         break;
@@ -907,12 +992,20 @@ switch (yykind)
         value.template destroy< Let* > ();
         break;
 
+      case symbol_kind::S_method: // method
+        value.template destroy< Method* > ();
+        break;
+
+      case symbol_kind::S_program: // program
+        value.template destroy< Program* > ();
+        break;
+
       case symbol_kind::S_type: // type
-      case symbol_kind::S_60_type_id: // type-id
+      case symbol_kind::S_59_type_id: // type-id
         value.template destroy< Type* > ();
         break;
 
-      case symbol_kind::S_71_un_op: // un-op
+      case symbol_kind::S_70_un_op: // un-op
         value.template destroy< UnOp* > ();
         break;
 
@@ -923,7 +1016,7 @@ switch (yykind)
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // "type-identifier"
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_59_object_id: // object-id
+      case symbol_kind::S_58_object_id: // object-id
         value.template destroy< std::string > ();
         break;
 
@@ -2079,9 +2172,9 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 373,     ///< Last index in yytable_.
-      yynnts_ = 26,  ///< Number of nonterminal symbols.
-      yyfinal_ = 9 ///< Termination state number.
+      yylast_ = 381,     ///< Last index in yytable_.
+      yynnts_ = 25,  ///< Number of nonterminal symbols.
+      yyfinal_ = 7 ///< Termination state number.
     };
 
 
@@ -2106,17 +2199,23 @@ switch (yykind)
   {
     switch (this->kind ())
     {
-      case symbol_kind::S_70_bin_op: // bin-op
+      case symbol_kind::S_69_bin_op: // bin-op
         value.copy< BinOp* > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_block: // block
-      case symbol_kind::S_65_block_aux: // block-aux
+        value.copy< Block* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_class: // class
+        value.copy< Class* > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_if: // if
       case symbol_kind::S_while: // while
       case symbol_kind::S_literal: // literal
-      case symbol_kind::S_74_boolean_literal: // boolean-literal
+      case symbol_kind::S_73_boolean_literal: // boolean-literal
         value.copy< Expr* > (YY_MOVE (that.value));
         break;
 
@@ -2124,7 +2223,7 @@ switch (yykind)
         value.copy< Field* > (YY_MOVE (that.value));
         break;
 
-      case symbol_kind::S_62_formals_aux: // formals-aux
+      case symbol_kind::S_61_formals_aux: // formals-aux
       case symbol_kind::S_formal: // formal
         value.copy< Formal* > (YY_MOVE (that.value));
         break;
@@ -2133,12 +2232,20 @@ switch (yykind)
         value.copy< Let* > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_method: // method
+        value.copy< Method* > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_program: // program
+        value.copy< Program* > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_type: // type
-      case symbol_kind::S_60_type_id: // type-id
+      case symbol_kind::S_59_type_id: // type-id
         value.copy< Type* > (YY_MOVE (that.value));
         break;
 
-      case symbol_kind::S_71_un_op: // un-op
+      case symbol_kind::S_70_un_op: // un-op
         value.copy< UnOp* > (YY_MOVE (that.value));
         break;
 
@@ -2149,7 +2256,7 @@ switch (yykind)
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // "type-identifier"
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_59_object_id: // object-id
+      case symbol_kind::S_58_object_id: // object-id
         value.copy< std::string > (YY_MOVE (that.value));
         break;
 
@@ -2182,17 +2289,23 @@ switch (yykind)
     super_type::move (s);
     switch (this->kind ())
     {
-      case symbol_kind::S_70_bin_op: // bin-op
+      case symbol_kind::S_69_bin_op: // bin-op
         value.move< BinOp* > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_block: // block
-      case symbol_kind::S_65_block_aux: // block-aux
+        value.move< Block* > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_class: // class
+        value.move< Class* > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_if: // if
       case symbol_kind::S_while: // while
       case symbol_kind::S_literal: // literal
-      case symbol_kind::S_74_boolean_literal: // boolean-literal
+      case symbol_kind::S_73_boolean_literal: // boolean-literal
         value.move< Expr* > (YY_MOVE (s.value));
         break;
 
@@ -2200,7 +2313,7 @@ switch (yykind)
         value.move< Field* > (YY_MOVE (s.value));
         break;
 
-      case symbol_kind::S_62_formals_aux: // formals-aux
+      case symbol_kind::S_61_formals_aux: // formals-aux
       case symbol_kind::S_formal: // formal
         value.move< Formal* > (YY_MOVE (s.value));
         break;
@@ -2209,12 +2322,20 @@ switch (yykind)
         value.move< Let* > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_method: // method
+        value.move< Method* > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_program: // program
+        value.move< Program* > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_type: // type
-      case symbol_kind::S_60_type_id: // type-id
+      case symbol_kind::S_59_type_id: // type-id
         value.move< Type* > (YY_MOVE (s.value));
         break;
 
-      case symbol_kind::S_71_un_op: // un-op
+      case symbol_kind::S_70_un_op: // un-op
         value.move< UnOp* > (YY_MOVE (s.value));
         break;
 
@@ -2225,7 +2346,7 @@ switch (yykind)
       case symbol_kind::S_OBJECTIDENTIFIER: // "object-identifier"
       case symbol_kind::S_TYPEIDENTIFIER: // "type-identifier"
       case symbol_kind::S_STRING: // "string-literal"
-      case symbol_kind::S_59_object_id: // object-id
+      case symbol_kind::S_58_object_id: // object-id
         value.move< std::string > (YY_MOVE (s.value));
         break;
 
@@ -2292,7 +2413,7 @@ switch (yykind)
 
 #line 19 "vsop.y"
 } // VSOP
-#line 2296 "parser.hpp"
+#line 2417 "parser.hpp"
 
 
 
