@@ -104,7 +104,7 @@
 %type <Expr> type-id 
 %type <Expr> object-id   
 %type <Expr> init
-%type <std::string> formal-aux
+%type <std::string> formals-aux
 %type <Expr> bin-op
 %type <Expr> un-op
 %type <Expr> expr
@@ -125,7 +125,10 @@
 %%
 // Grammar rules
 
-%start unit;
+%start init;
+init: 
+    %empty    {}
+
 unit: 
     %empty    {}
 
@@ -133,7 +136,7 @@ program: class { class };
 
 class:          "class" type-id extends "{" class-body;
 
-extends:     "extends" type_id
+extends:     "extends" type-id
 
 class-body:     "}" 
                     | field ";" class-body
@@ -145,46 +148,47 @@ method:          object-id formals ":" type block;
 
 type:            type-id | "int32" | "bool" | "string" | "unit";
 
-object_id:		OBJECTIDENTIFIER
+object-id:		OBJECTIDENTIFIER
 				| TYPEIDENTIFIER
 				{ 
 					cout << "syntax error, unexpected type-identifier ";
 				};
 
-type_id:		TYPEIDENTIFIER
+type-id:		TYPEIDENTIFIER
 				| OBJECTIDENTIFIER
 				{ 
                     cout << "syntax error, unexpected object-identifier ";
 				};
 
 formals:     "(" ")"    
-            | "(" formal-aux;
+            | "(" formals-aux;
 
 formals-aux:    formal ")"
 				| formal "," formals-aux;
 
-formal:         object-id ":" type;
+formal:         object-id ":" type
+                { $$ = new Formal($1, $3)};
 
 block:          "{" expr block-aux;
 
 block-aux:      expr "}"
                 | expr block-aux;
 
-        expr:   if
-                | while
-                | let
-                | object-id "<-" expr
-                | object-id "(" args
-                | expr "." object-id "(" args 
-                | "new" type-id
-                | object-id
-                | "self"
-                | literal
-                | "(" ")"
-                | "(" expr ")"
-                | block
-                | bin-op ";"
-                | un-op ";";
+expr:   if
+        | while
+        | let
+        | object-id "<-" expr
+        | object-id "(" args
+        | expr "." object-id "(" args 
+        | "new" type-id
+        | object-id
+        | "self"
+        | literal
+        | "(" ")"
+        | "(" expr ")"
+        | block
+        | bin-op ";"
+        | un-op ";";
 
 if: expr "then" expr
     { $$ = new If($1,$3)}
@@ -192,10 +196,13 @@ if: expr "then" expr
     { $$ = new If($1,$3,$5)};
 
 while: expr "do" expr
-       { $$ = new While($1,$3)};
+    { $$ = new While($1,$3)};
 
 
-let: %empty
+let: object-id ":" type "in" expr
+    { $$ = new Let($1, $3, $5)}
+    | object-id ":" type "<-" expr "in" expr
+    { $$ = new Let($1, $3, $5, $7)};
 
 bin-op:			expr "and" expr
                 { $$ = new BinOp($1, "and",$3) }
@@ -225,14 +232,24 @@ bin-op:			expr "and" expr
                 { $$ = new BinOp($1,"^",$3) };
 
 un-op:          "not" expr
+                {$$ = new UnOp("not", $1)}
                 | "-" expr
-                | "isnull" expr;
+                {$$ = new UnOp("-", $1)}
+                | "isnull" expr
+                {$$ = new UnOp("isnull", $1)};
 
 args:       expr ")" 
             | expr "," args;
 
-literal:         NUMBER | STRING | boolean-literal;
-boolean-literal:        "true" | "false";
+literal:         NUMBER 
+                {$$ = new Number($1)}
+                | STRING
+                {$$ = new String($1)}
+                | boolean-literal;
+boolean-literal:        "true" 
+                        {$$ = new Bool($1)}
+                        | "false"
+                        {$$ = new Bool($1)};
 
 %%
 // User code
