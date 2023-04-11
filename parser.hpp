@@ -415,6 +415,7 @@ namespace VSOP {
       // expr
       // if
       // while
+      // let
       // literal
       // boolean-literal
       char dummy4[sizeof (Expr*)];
@@ -422,34 +423,30 @@ namespace VSOP {
       // field
       char dummy5[sizeof (Field*)];
 
-      // formals-aux
       // formal
       char dummy6[sizeof (Formal*)];
 
-      // let
-      char dummy7[sizeof (Let*)];
-
       // method
-      char dummy8[sizeof (Method*)];
+      char dummy7[sizeof (Method*)];
 
       // program
-      char dummy9[sizeof (Program*)];
+      char dummy8[sizeof (Program*)];
 
       // type
       // type-id
-      char dummy10[sizeof (Type*)];
+      char dummy9[sizeof (Type*)];
 
       // un-op
-      char dummy11[sizeof (UnOp*)];
+      char dummy10[sizeof (UnOp*)];
 
       // "integer-literal"
-      char dummy12[sizeof (int)];
+      char dummy11[sizeof (int)];
 
       // "object-identifier"
       // "type-identifier"
       // "string-literal"
       // object-id
-      char dummy13[sizeof (std::string)];
+      char dummy12[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -686,6 +683,7 @@ namespace VSOP {
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_if: // if
       case symbol_kind::S_while: // while
+      case symbol_kind::S_let: // let
       case symbol_kind::S_literal: // literal
       case symbol_kind::S_73_boolean_literal: // boolean-literal
         value.move< Expr* > (std::move (that.value));
@@ -695,13 +693,8 @@ namespace VSOP {
         value.move< Field* > (std::move (that.value));
         break;
 
-      case symbol_kind::S_61_formals_aux: // formals-aux
       case symbol_kind::S_formal: // formal
         value.move< Formal* > (std::move (that.value));
-        break;
-
-      case symbol_kind::S_let: // let
-        value.move< Let* > (std::move (that.value));
         break;
 
       case symbol_kind::S_method: // method
@@ -840,20 +833,6 @@ namespace VSOP {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, Let*&& v, location_type&& l)
-        : Base (t)
-        , value (std::move (v))
-        , location (std::move (l))
-      {}
-#else
-      basic_symbol (typename Base::kind_type t, const Let*& v, const location_type& l)
-        : Base (t)
-        , value (v)
-        , location (l)
-      {}
-#endif
-
-#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, Method*&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
@@ -974,6 +953,7 @@ switch (yykind)
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_if: // if
       case symbol_kind::S_while: // while
+      case symbol_kind::S_let: // let
       case symbol_kind::S_literal: // literal
       case symbol_kind::S_73_boolean_literal: // boolean-literal
         value.template destroy< Expr* > ();
@@ -983,13 +963,8 @@ switch (yykind)
         value.template destroy< Field* > ();
         break;
 
-      case symbol_kind::S_61_formals_aux: // formals-aux
       case symbol_kind::S_formal: // formal
         value.template destroy< Formal* > ();
-        break;
-
-      case symbol_kind::S_let: // let
-        value.template destroy< Let* > ();
         break;
 
       case symbol_kind::S_method: // method
@@ -1928,7 +1903,7 @@ switch (yykind)
     // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
     // positive, shift that token.  If negative, reduce the rule whose
     // number is the opposite.  If YYTABLE_NINF, syntax error.
-    static const unsigned char yytable_[];
+    static const short yytable_[];
 
     static const short yycheck_[];
 
@@ -2172,7 +2147,7 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 381,     ///< Last index in yytable_.
+      yylast_ = 384,     ///< Last index in yytable_.
       yynnts_ = 25,  ///< Number of nonterminal symbols.
       yyfinal_ = 7 ///< Termination state number.
     };
@@ -2214,6 +2189,7 @@ switch (yykind)
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_if: // if
       case symbol_kind::S_while: // while
+      case symbol_kind::S_let: // let
       case symbol_kind::S_literal: // literal
       case symbol_kind::S_73_boolean_literal: // boolean-literal
         value.copy< Expr* > (YY_MOVE (that.value));
@@ -2223,13 +2199,8 @@ switch (yykind)
         value.copy< Field* > (YY_MOVE (that.value));
         break;
 
-      case symbol_kind::S_61_formals_aux: // formals-aux
       case symbol_kind::S_formal: // formal
         value.copy< Formal* > (YY_MOVE (that.value));
-        break;
-
-      case symbol_kind::S_let: // let
-        value.copy< Let* > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_method: // method
@@ -2304,6 +2275,7 @@ switch (yykind)
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_if: // if
       case symbol_kind::S_while: // while
+      case symbol_kind::S_let: // let
       case symbol_kind::S_literal: // literal
       case symbol_kind::S_73_boolean_literal: // boolean-literal
         value.move< Expr* > (YY_MOVE (s.value));
@@ -2313,13 +2285,8 @@ switch (yykind)
         value.move< Field* > (YY_MOVE (s.value));
         break;
 
-      case symbol_kind::S_61_formals_aux: // formals-aux
       case symbol_kind::S_formal: // formal
         value.move< Formal* > (YY_MOVE (s.value));
-        break;
-
-      case symbol_kind::S_let: // let
-        value.move< Let* > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_method: // method
@@ -2413,7 +2380,7 @@ switch (yykind)
 
 #line 19 "vsop.y"
 } // VSOP
-#line 2417 "parser.hpp"
+#line 2384 "parser.hpp"
 
 
 

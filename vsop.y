@@ -100,7 +100,6 @@
     UNIT        "unit"
     WHILE       "while"
     START       "start"
-
 ;
 
 // For some symbols, need to store a value
@@ -116,11 +115,11 @@
 %type <Block*> block
 %type <Expr*> if
 %type <Expr*> while
-%type <Let*> let
+%type <Expr*> let
 %type <Field*> field
-%type <Formal*> formals-aux
+%type formals-aux
 %type <Formal*> formal
-%type <Formal*> formals
+%type formals
 %type <Type*> type
 %type <Expr*> boolean-literal
 %type <Expr*> literal
@@ -139,7 +138,7 @@
 %right POW;
 %left DOT;
 
-%precedence "if" "then" "while";
+%precedence "if" "then" "while" "let" "in";
 %precedence "else";
 %%
 // Grammar rules
@@ -217,19 +216,20 @@ formals-aux:    formal ")"
 formal:         object-id ":" type
                 {Formal *f = new Formal($1, $3); $$ = f;};
 
-block:          "{" block-aux "}"
+block:          "{" block-aux
                 {list<Expr*> e = exptmp; exptmp.clear(); Block *b = new Block(e); $$=b;};
 
-block-aux:      expr
+block-aux:      expr "}"
                 {exptmp.push_back($1);}
-                | expr block-aux
-                {exptmp.push_back($1);};
                 | expr ";" block-aux
                 {exptmp.push_back($1);};
 
 expr:   if
+        { $$ = $1; }
         | while
+        { $$ = $1; }
         | let
+        { $$ = $1; }
         | object-id "<-" expr
         { Assign *a = new Assign($1, $3); $$ = a;}
         | object-id "(" args
@@ -243,28 +243,31 @@ expr:   if
         | "self"
         { Self *s = new Self(); $$ = s;}
         | literal
+        {$$ = $1;}
         | "(" ")"
         {Expr *e = new Expr(); $$ = e;}
         | "(" expr ")"
         {$$ = $2;}
         | block
-        | bin-op ";"
-        | bin-op
-        | un-op ";";
+        { $$ = $1; }
+        | bin-op 
+        {$$ = $1;}
+        | un-op 
+        {$$ = $1;};
 
-if: expr "then" expr
-    { If *i = new If($1,$3); $$ = i;}
-    | expr "then" expr "else" expr
-    { If *i = new If($1,$3,$5); $$ = i;};
+if: IF expr THEN expr
+    { If *i = new If($2,$4); $$ = i;}
+    | IF expr THEN expr ELSE expr
+    { If *i = new If($2,$4,$6); $$ = i;};
 
-while: expr "do" expr
-    { While *w = new While($1,$3); $$ = w;};
+while: WHILE expr "do" expr
+    { While *w = new While($2,$4); $$ = w;};
 
 
-let: object-id ":" type "in" expr
-    { Let *l = new Let($1, $3, $5); $$ = l;}
-    | object-id ":" type "<-" expr "in" expr
-    { Let *l = new Let($1, $3, $5, $7); $$ = l;};
+let: LET object-id ":" type "in" expr
+    { Let *l = new Let($2, $4, $6); $$ = l;}
+    | LET object-id ":" type "<-" expr "in" expr
+    { Let *l = new Let($2, $4, $6, $8); $$ = l;};
 
 bin-op:			expr "and" expr
                 { BinOp *b = new BinOp($1, "and",$3); $$ = b; }
