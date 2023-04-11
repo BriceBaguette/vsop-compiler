@@ -55,11 +55,11 @@ public:
             }
             else
             {
-                cout << ",";
+                cout << ", ";
                 (*i)->print();
             }
         }
-        cout << "]" << endl;
+        cout << "]";
     }
 };
 
@@ -75,7 +75,6 @@ public:
     {
         cout << name << ":";
         type->print();
-        cout << endl;
     }
 };
 
@@ -98,17 +97,17 @@ public:
     {
         if (initExpr == NULL)
         {
-            cout << "Field(" << name << ",";
+            cout << "Field(" << name << ", ";
             type->print();
-            cout << ")" << endl;
+            cout << ")";
         }
         else
         {
-            cout << "Field(" << name << ",";
+            cout << "Field(" << name << ", ";
             type->print();
-            cout << ",";
+            cout << ", ";
             initExpr->print();
-            cout << ")" << endl;
+            cout << ")";
         }
     }
 };
@@ -127,7 +126,8 @@ public:
     void print()
     {
         bool first = true;
-        cout << "Method(" << name << "[";
+        cout << "Method(" << name << ", [";
+        formals.reverse();
         for (list<Formal *>::iterator i = formals.begin(); i != formals.end(); ++i)
         {
             if (first)
@@ -137,7 +137,7 @@ public:
             }
             else
             {
-                cout << ",";
+                cout << ", ";
                 (*i)->print();
             }
         }
@@ -145,7 +145,7 @@ public:
         returnType->print();
         cout << ", ";
         block->print();
-        cout << ")" << endl;
+        cout << ")";
     }
 };
 
@@ -166,11 +166,12 @@ public:
     void print()
     {
         bool first = true;
-        cout << "Class(" << class_name;
+        cout << "Class(" << class_name << ", ";
         if (parent_class == "")
-            cout << "Object";
+            cout << "Object, [";
         else
-            cout << parent_class << "[";
+            cout << parent_class << ", [";
+        fields.reverse();
         for (list<Field *>::iterator i = fields.begin(); i != fields.end(); ++i)
         {
             if (first)
@@ -180,12 +181,13 @@ public:
             }
             else
             {
-                cout << ",";
+                cout << ", ";
                 (*i)->print();
             }
         }
         first = true;
         cout << "], [";
+        Methods.reverse();
         for (list<Method *>::iterator i = Methods.begin(); i != Methods.end(); ++i)
         {
             if (first)
@@ -195,11 +197,11 @@ public:
             }
             else
             {
-                cout << ",";
+                cout << ", ";
                 (*i)->print();
             }
         }
-        cout << "] )" << endl;
+        cout << "] )";
     }
 };
 
@@ -229,7 +231,7 @@ public:
             condExpr->print();
             cout << ",";
             thenExpr->print();
-            cout << ")" << endl;
+            cout << ")";
         }
         else
         {
@@ -239,7 +241,7 @@ public:
             thenExpr->print();
             cout << ",";
             elseExpr->print();
-            cout << ")" << endl;
+            cout << ")";
         }
     }
 };
@@ -261,7 +263,7 @@ public:
         condExpr->print();
         cout << ",";
         bodyExpr->print();
-        cout << ")" << endl;
+        cout << ")";
     }
 };
 
@@ -289,7 +291,7 @@ public:
             type->print();
             cout << ",";
             scopeExpr->print();
-            cout << ")" << endl;
+            cout << ")";
         }
         else
         {
@@ -299,7 +301,7 @@ public:
             initExpr->print();
             cout << ",";
             scopeExpr->print();
-            cout << ")" << endl;
+            cout << ")";
         }
     }
 };
@@ -317,7 +319,7 @@ public:
     {
         cout << "New(";
         type->print();
-        cout << ")" << endl;
+        cout << ")";
     }
 };
 
@@ -335,6 +337,7 @@ public:
     {
         bool first = true;
         cout << "[";
+        classes.reverse();
         for (list<Class *>::iterator i = classes.begin(); i != classes.end(); ++i)
         {
             if (first)
@@ -344,7 +347,7 @@ public:
             }
             else
             {
-                cout << ",";
+                cout << ", "<< endl;
                 (*i)->print();
             }
         }
@@ -368,7 +371,7 @@ public:
     {
         cout << "Assign(" << name << ",";
         expr->print();
-        cout << ")" << endl;
+        cout << ")";
     }
 };
 
@@ -392,7 +395,7 @@ public:
         expr1->print();
         cout << ",";
         expr2->print();
-        cout << ")" << endl;
+        cout << ")";
     }
 };
 
@@ -412,7 +415,7 @@ public:
     {
         cout << "UnOp(" << op << ",";
         expr->print();
-        cout << ")" << endl;
+        cout << ")";
     }
 };
 
@@ -458,7 +461,7 @@ public:
                 }
             }
             cout << "]"
-                 << ")" << endl;
+                 << ")";
         }
         else
         {
@@ -477,7 +480,7 @@ public:
                 }
             }
             cout << "]"
-                 << ")" << endl;
+                 << ")";
         }
     }
 };
@@ -494,7 +497,7 @@ public:
 
     void print()
     {
-        cout << num << endl;
+        cout << num;
     }
 };
 
@@ -510,7 +513,7 @@ public:
 
     void print()
     {
-        cout << str << endl;
+        cout << str;
     }
 };
 
@@ -526,7 +529,7 @@ public:
 
     void print()
     {
-        cout << bo << endl;
+        cout << bo;
     }
 };
 
@@ -537,6 +540,6 @@ public:
 
     void print()
     {
-        cout << "self" << endl;
+        cout << "self";
     }
 };

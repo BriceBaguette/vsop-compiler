@@ -120,6 +120,7 @@
 %type <Field*> field
 %type <Formal*> formals-aux
 %type <Formal*> formal
+%type <Formal*> formals
 %type <Type*> type
 %type <Expr*> boolean-literal
 %type <Expr*> literal
@@ -150,16 +151,16 @@ start:
         };
 
 program: program-aux
-        {list<Class*> c = classtmp; classtmp.empty(); Program *p = new Program(c); $$ = p;};
+        {list<Class*> c = classtmp; classtmp.clear(); Program *p = new Program(c); $$ = p;};
 
 program-aux: {}
              | class program-aux
              {classtmp.push_back($1);};
 
 class:      "class" TYPEIDENTIFIER "{" class-body
-            {list<Field*> f = fieldtmp; fieldtmp.empty(); list<Method*> m = methodtmp; methodtmp.empty(); Class *c = new Class($2, f, m); $$ = c;}
+            {list<Field*> f = fieldtmp; fieldtmp.clear(); list<Method*> m = methodtmp; methodtmp.clear(); Class *c = new Class($2, f, m); $$ = c;}
             | "class" TYPEIDENTIFIER "extends" TYPEIDENTIFIER "{" class-body
-            {list<Field*> f = fieldtmp; fieldtmp.empty(); list<Method*> m = methodtmp; methodtmp.empty(); Class *c = new Class($2, $4, f, m); $$ = c;};
+            {list<Field*> f = fieldtmp; fieldtmp.clear(); list<Method*> m = methodtmp; methodtmp.clear(); Class *c = new Class($2, $4, f, m); $$ = c;};
 
 class-body:     "}" 
                     | field ";" class-body
@@ -169,13 +170,13 @@ class-body:     "}"
 
 field:          object-id ":" type
                  {Field *f = new Field($1,$3); $$ = f;}
-                | object-id ":" type expr
-                 {Field *f = new Field($1,$3,$4); $$ = f;};
+                | object-id ":" type "<-" expr
+                 {Field *f = new Field($1,$3,$5); $$ = f;};
 
 
 
 method:          object-id formals ":" type block
-                 {list<Formal*> f = formtmp; formtmp.empty();Method *m = new Method($1, f, $4, $5); $$ = m;};
+                 {list<Formal*> f = formtmp; formtmp.clear(); Method *m = new Method($1, f, $4, $5); $$ = m;};
 
 type:            type-id 
                 | "int32" 
@@ -216,12 +217,14 @@ formals-aux:    formal ")"
 formal:         object-id ":" type
                 {Formal *f = new Formal($1, $3); $$ = f;};
 
-block:          "{" expr block-aux
-                {list<Expr*> e = exptmp; exptmp.empty(); Block *b = new Block(e); $$=b;};
+block:          "{" block-aux "}"
+                {list<Expr*> e = exptmp; exptmp.clear(); Block *b = new Block(e); $$=b;};
 
-block-aux:      expr "}"
+block-aux:      expr
                 {exptmp.push_back($1);}
                 | expr block-aux
+                {exptmp.push_back($1);};
+                | expr ";" block-aux
                 {exptmp.push_back($1);};
 
 expr:   if
@@ -230,12 +233,13 @@ expr:   if
         | object-id "<-" expr
         { Assign *a = new Assign($1, $3); $$ = a;}
         | object-id "(" args
-        {list<Expr*> a = argtmp; argtmp.empty(); Call *c = new Call($1, a); $$ = c;}
+        {list<Expr*> a = argtmp; argtmp.clear(); Call *c = new Call($1, a); $$ = c;}
         | expr "." object-id "(" args 
-        {list<Expr*> a = argtmp; argtmp.empty(); Call *c = new Call($3, $1, a); $$ = c;}
+        {list<Expr*> a = argtmp; argtmp.clear(); Call *c = new Call($3, $1, a); $$ = c;}
         | "new" type-id
         { New *n = new New($2); $$ = n;}
         | object-id
+        {Expr *e = new String($1); $$ = e;}
         | "self"
         { Self *s = new Self(); $$ = s;}
         | literal
@@ -245,6 +249,7 @@ expr:   if
         {$$ = $2;}
         | block
         | bin-op ";"
+        | bin-op
         | un-op ";";
 
 if: expr "then" expr
@@ -295,7 +300,8 @@ un-op:          "not" expr
                 | "isnull" expr
                 {UnOp *u = new UnOp("isnull", $2); $$ = u;};
 
-args:       expr ")" 
+args:       ")"
+            | expr ")" 
                 {argtmp.push_back($1);}
             | expr "," args
                 {argtmp.push_back($1);};
