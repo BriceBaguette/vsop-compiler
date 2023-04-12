@@ -46,6 +46,7 @@ public:
     {
         bool first = true;
         cout << "[";
+        exprs.reverse();
         for (list<Expr *>::iterator i = exprs.begin(); i != exprs.end(); ++i)
         {
             if (first)
@@ -287,19 +288,19 @@ public:
     {
         if (initExpr == NULL)
         {
-            cout << "Let(" << name << ",";
+            cout << "Let(" << name << ", ";
             type->print();
-            cout << ",";
+            cout << ", ";
             scopeExpr->print();
             cout << ")";
         }
         else
         {
-            cout << "Let(" << name << ",";
+            cout << "Let(" << name << ", ";
             type->print();
-            cout << ",";
+            cout << ", ";
             initExpr->print();
-            cout << ",";
+            cout << ", ";
             scopeExpr->print();
             cout << ")";
         }
@@ -393,7 +394,7 @@ public:
     {
         cout << "BinOp(" << op << ",";
         expr1->print();
-        cout << ",";
+        cout << ", ";
         expr2->print();
         cout << ")";
     }
@@ -440,13 +441,14 @@ public:
     }
 
     void print()
-    {
+    {   args.reverse();
         bool first = true;
         if (objExpr != NULL)
         {
             cout << "Call(";
             objExpr->print();
-            cout << "," << name << "[";
+            cout << ", " << name << ", [";
+            
             for (list<Expr *>::iterator i = args.begin(); i != args.end(); ++i)
             {
                 if (first)
@@ -456,7 +458,7 @@ public:
                 }
                 else
                 {
-                    cout << ",";
+                    cout << ", ";
                     (*i)->print();
                 }
             }
@@ -465,7 +467,7 @@ public:
         }
         else
         {
-            cout << "Call(self," << name << "[";
+            cout << "Call(self, " << name << ", [";
             for (list<Expr *>::iterator i = args.begin(); i != args.end(); ++i)
             {
                 if (first)
@@ -475,7 +477,7 @@ public:
                 }
                 else
                 {
-                    cout << ",";
+                    cout << ", ";
                     (*i)->print();
                 }
             }
@@ -508,12 +510,17 @@ public:
 
     String(string s)
     {
+        str = "\"" + s + "\"";
+    }
+
+    String(string s, int n)
+    {
         str = s;
     }
 
     void print()
     {
-        cout << str;
+        cout << str ;
     }
 };
 

@@ -115,11 +115,6 @@ vertical_blank ({lf}|{ff}|{cr})
     currentString += "\\x0d";
 }
 
-<QUOTE>"\\x"  {
-    loc.step();
-    currentString += yytext;
-}
-
 <QUOTE>"\\"({vertical_blank})+({horizontal_blank})* {
     loc.lines();
     loc.columns(yyleng-2);
@@ -154,6 +149,22 @@ vertical_blank ({lf}|{ff}|{cr})
     print_error(initPos.begin, "unclosed double quote");
     BEGIN(INITIAL);
     return Parser::make_YYerror(initPos);
+}
+
+<QUOTE>"\\x"{hex_digit}+ {
+    print_error(loc.begin,"Wrong escape char \\x and only one hex-digit");
+    exit(-1);
+    
+}
+
+<QUOTE>"\\x" {
+    print_error(loc.begin,"Wrong escape char \\x");
+    exit(-1);
+}
+
+<QUOTE>"\\x"{letter}+ {
+    print_error(loc.begin,"Wrong escape char \\x and some letters");
+    exit(-1);
 }
 
     /* Other valid characters */

@@ -128,6 +128,10 @@
 %type <Program*> program
 
 // Precedence
+
+%precedence "if" "then" "while" "let" "in";
+%precedence "else";
+
 %right ASSIGN;
 %left AND;
 %right NOT;
@@ -138,8 +142,7 @@
 %right POW;
 %left DOT;
 
-%precedence "if" "then" "while" "let" "in";
-%precedence "else";
+
 %%
 // Grammar rules
 
@@ -239,7 +242,7 @@ expr:   if
         | "new" type-id
         { New *n = new New($2); $$ = n;}
         | object-id
-        {Expr *e = new String($1); $$ = e;}
+        {Expr *e = new String($1, 0); $$ = e;}
         | "self"
         { Self *s = new Self(); $$ = s;}
         | literal
