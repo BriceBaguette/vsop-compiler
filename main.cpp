@@ -20,12 +20,14 @@ using namespace std;
 enum class Mode
 {
     LEX,
-    PARSE
+    PARSE,
+    SEMANTIC
 };
 
 static const map<string, Mode> flag_to_mode = {
     {"-l", Mode::LEX},
     {"-p", Mode::PARSE},
+    {"-c", Mode::SEMANTIC},
 };
 
 int main(int argc, char const *argv[])
@@ -70,7 +72,20 @@ int main(int argc, char const *argv[])
             driver.result->print();
 
         return res;
-    }
+    
+    case Mode::SEMANTIC:
+        res = driver.parse();
 
+        if (res == 0){
+            int check = driver.result->general_check();
+            if (check == 0)
+            {
+                driver.result->print_semantic();
+                return 0;
+            }
+            return -1;
+        }
+        return res;
+    }
     return 0;
 }

@@ -193,20 +193,13 @@ type:            type-id
 object-id:		OBJECTIDENTIFIER
                 {
                    $$ = $1;
-                }
-				| TYPEIDENTIFIER
-				{ 
-					cout << "syntax error, unexpected type-identifier ";
-				};
+                };
+				
 
 type-id:		TYPEIDENTIFIER
                 {
                     Type *t = new Type($1); $$ = t;
-                }
-				| OBJECTIDENTIFIER
-				{ 
-                    cout << "syntax error, unexpected object-identifier ";
-				};
+                };
 
 formals:     "(" ")"
             | "(" formals-aux;
@@ -242,7 +235,7 @@ expr:   if
         | "new" type-id
         { New *n = new New($2); $$ = n;}
         | object-id
-        {Expr *e = new String($1, 0); $$ = e;}
+        {Expr *e = new Id($1); $$ = e;}
         | "self"
         { Self *s = new Self(); $$ = s;}
         | literal
